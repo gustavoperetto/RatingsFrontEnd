@@ -2,19 +2,28 @@ import React, { useState } from 'react';
 import Sidebar from '../Components/Sidebar';
 import Navbar from '../Components/Navbar';
 import Footer from '../Components/Footer';
+import Modal from '../Components/Modal';
 import './Home.css';
 import ProductsList from '../Components/ProductsList';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import {Pagination, Scrollbar } from 'swiper/modules';
+import { Pagination, Scrollbar } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-
 function Home() {
   const [isVisible, setVisible] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const toggleVisible = () => {
     setVisible((prevState) => !prevState);
+  };
+
+  const handleAddProductClick = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -23,7 +32,7 @@ function Home() {
         <div className='home-carousel'>
           <span className='home-title'>Ratings</span>
           <Swiper
-           modules={[Pagination, Scrollbar]}
+            modules={[Pagination, Scrollbar]}
             spaceBetween={10}
             slidesPerView={1}
             pagination={{ clickable: true }}
@@ -37,7 +46,7 @@ function Home() {
         </div>
         <div>
           {!isVisible && <Navbar onToggleVisible={toggleVisible} />}
-          {isVisible && <Sidebar onToggleVisible={toggleVisible} />}
+          {isVisible && <Sidebar onToggleVisible={toggleVisible} onAddProduct={handleAddProductClick} />}
         </div >
         <div className='products-grid-root'>
           <ProductsList />
@@ -45,6 +54,7 @@ function Home() {
         <div className='home-footer'>
           <Footer />
         </div>
+        <Modal show={showModal} onClose={handleCloseModal} />
       </div>
     </>
   );

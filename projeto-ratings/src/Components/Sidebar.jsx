@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onToggleVisible }) {
+function Sidebar({ onToggleVisible, onAddProduct }) {
     return (
         <div>
             <div className="sidebar">
@@ -25,6 +25,12 @@ function Sidebar({ onToggleVisible }) {
                                 <a href="#" className="p-link">Sale</a>
                             </li>
                             <li className="p-menuitem">
+                                <a onClick={onAddProduct} className="p-link">Add Product</a>
+                            </li>
+                            <li className="p-menuitem">
+                                <a className="p-link">Add Category</a>
+                            </li>
+                            <li className="p-menuitem">
                                 <a href="#" className="p-link">Account</a>
                             </li>
                         </ul>
@@ -32,7 +38,7 @@ function Sidebar({ onToggleVisible }) {
                 </div>
                 <div className="footer-sidebar">
                     <footer>
-                        <h4>&copy; 2024 Ratings.</h4> 
+                        <h4>&copy; 2024 Ratings.</h4>
                         <span>All rights reserved.</span>
                     </footer>
                 </div>

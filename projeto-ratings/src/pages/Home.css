@@ -35,21 +35,39 @@
 
 @media (min-width:1024px) {
     .products-grid-root {
-        max-width: 80%;
+        max-width: 70%;
         height: auto;
         display: flex;
         flex-flow: column wrap;
         margin: 0 auto;
-        margin-top: 2%;
-        margin-bottom: 10%;
-        padding: 15px;
+        margin-top: 0.1%;
+        margin-bottom: -0.2%;
+        padding: 20px 0px 0px 50px;
         border-radius: 10px;
-        background-color: #f5f5f5;
+        background-color: #0c111b;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
-        overflow: auto;
     }
-    .slide-1 {
-        width: 80%;
+
+    .home-title {
+        max-width: 70%;
+    }
+  
+    .home-carousel {
+        z-index: 1;
+        background-color: #111827;
+        border-bottom: 0px;
+        max-width: 70%;
         height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+    }
+
+    .slide-1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
     }
 }

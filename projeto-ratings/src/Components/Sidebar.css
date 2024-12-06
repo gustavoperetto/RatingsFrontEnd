@@ -65,6 +65,7 @@
    color: white;
    padding: 1em 0.5em;
    margin: 0 0.5em;
+   cursor: pointer;
  }
 
 
@@ -86,6 +87,26 @@
  @media (min-width: 1024px) {
    .sidebar {
      width: 15vw;
+   }
+
+   .sidebar .settings-icon {
+     max-width: 15%;
+     cursor: pointer;
+   }
+
+   .sidebar .ratings_logo {
+     max-width: 35%;
+   }
+
+   .sidebar .p-menu {
+     list-style: none;
+   }
+
+   .sidebar .footer-sidebar {
+     display: flex;
+     justify-content: center;
+     font-size: 18px;
+
    }
 
  }

@@ -15,27 +15,25 @@ function ProductsList() {
   }, [])
 
   return (
-    <div>
-      <div>
-        {products.length === 0 && <div>Loading...</div>}
-        {products.length > 0 &&
-          <div className='products-grid'>
-            {products.map(product =>
-              <div className='products-grid-item' key={product.id}>
-                <div className='products-grid-image'>
-                  <img src="favorito.png" alt="favorite" className='favorite_icon' />
-                </div>
-                <h4>
-                  {product.name}
-                </h4>
-                <span>
-                  R$ {product.price.toFixed(2)}
-                </span>
+    <>
+      {products.length === 0 && <div>Loading...</div>}
+      {products.length > 0 &&
+        <div className='products-grid'>
+          {products.map(product =>
+            <div className='products-grid-item' key={product.id}>
+              <div className='products-grid-image'>
+                <img src="favorito.png" alt="favorite" className='favorite_icon' />
               </div>
-            )}
-          </div>}
-      </div>
-    </div>
+              <h4>
+                {product.name}
+              </h4>
+              <span>
+                R$ {product.price.toFixed(2)}
+              </span>
+            </div>
+          )}
+        </div>}
+    </>
   )
 }
 
