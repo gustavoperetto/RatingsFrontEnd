@@ -68,7 +68,7 @@
  }
 
 
- .footer {
+ .footer-sidebar {
    position: absolute;
    bottom: 0;
    color: white;
@@ -79,7 +79,7 @@
    width: 90%;
  }
 
- .footer span {
+ .footer-sidebar span {
    font-size: 0.6rem;
  }
 

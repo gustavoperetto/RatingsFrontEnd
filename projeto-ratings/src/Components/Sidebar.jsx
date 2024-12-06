@@ -30,7 +30,7 @@ function Sidebar({ onToggleVisible }) {
                         </ul>
                     </div>
                 </div>
-                <div className="footer">
+                <div className="footer-sidebar">
                     <footer>
                         <h4>&copy; 2024 Ratings.</h4> 
                         <span>All rights reserved.</span>

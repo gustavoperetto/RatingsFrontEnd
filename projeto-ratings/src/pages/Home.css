@@ -2,6 +2,7 @@
     height: 100%;
     width: 100%;
     display: block;
+    background-color: #111827;
 }
 
 .home-title {
@@ -30,4 +31,25 @@
     max-width: 100%;
     height: auto;
     margin-top: 12%;
+}
+
+@media (min-width:1024px) {
+    .products-grid-root {
+        max-width: 80%;
+        height: auto;
+        display: flex;
+        flex-flow: column wrap;
+        margin: 0 auto;
+        margin-top: 2%;
+        margin-bottom: 10%;
+        padding: 15px;
+        border-radius: 10px;
+        background-color: #f5f5f5;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        overflow: auto;
+    }
+    .slide-1 {
+        width: 80%;
+        height: auto;
+    }
 }
