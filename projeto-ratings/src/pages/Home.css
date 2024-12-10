@@ -4,6 +4,9 @@
     display: block;
     background-color: #111827;
 }
+.products-grid-root {
+    height: 47.8vh;
+}
 
 .home-title {
     position: absolute;
@@ -36,7 +39,7 @@
 @media (min-width:1024px) {
     .products-grid-root {
         max-width: 70%;
-        height: auto;
+        height: 60vh;
         display: flex;
         flex-flow: column wrap;
         margin: 0 auto;

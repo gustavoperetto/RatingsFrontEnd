@@ -6,23 +6,14 @@ function Footer() {
     return (
         <div className="footer">
             <div className="footer-left">
-                <h3>Atendimento</h3>
-                <span>
-                    Horário de atendimento:
-                    <br />
-                    08:00 às 20:00 - Segunda a Sexta,
-                    <br />
-                    09:00 às 15:00 - Sabado,
-                    <br />
-                    horário de Brasília
-                    (Exceto domingo e feriados)
-                    <br />
-                    Endereço:
-                    <br />
-                    Rua Carlos Gomes, 1321 -
-                    9° andar - Centro
-                    <br />
-                    Joinville/SC - CEP: 89220-000
+                <h3>Customer Service</h3>
+                <span> Service hours: <br />
+                    8:00 AM to 8:00 PM - Monday to Friday, <br />
+                    9:00 AM to 3:00 PM - Saturday, <br />
+                    Brasília Time Zone (Except Sundays and holidays) <br />
+                    Address: <br />
+                    Rua Carlos Gomes, 1321 - 9th floor - Downtown <br />
+                    Joinville/SC - ZIP: 89220-000
                 </span>
             </div>
             <div className="footer-right">
