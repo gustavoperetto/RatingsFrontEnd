@@ -29,10 +29,10 @@
  
 .navbar .shop_logo {
     position: absolute;
-    max-width: 10%;
+    max-width: 7.5%;
     height: auto;
-    right: 3%;
-    top: 8%;
+    right: 5%;
+    top: 20%;
   }
 
 @keyframes navslide {

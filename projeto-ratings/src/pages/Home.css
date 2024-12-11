@@ -5,7 +5,7 @@
     background-color: #111827;
 }
 .products-grid-root {
-    height: 47.8vh;
+    height: auto;
 }
 
 .home-title {
@@ -35,6 +35,43 @@
     height: auto;
     margin-top: 12%;
 }
+
+.home-navbar {
+    height: 5%;
+    background-color: #a686b1;
+    color: white;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.home-navbar form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: 15%;
+}
+
+.home-navbar label {
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #34495e;
+    transition: border-color 0.3s;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.home-navbar input:focus {
+    border-color: #a686b1;
+    outline: none;
+  }
 
 @media (min-width:1024px) {
     .products-grid-root {
@@ -72,5 +109,15 @@
         justify-content: center;
         align-items: center;
         margin: 0 auto;
+    }
+
+    .home-navbar {
+        max-width: 70%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .home-navbar label, input {
+        width: 300px;
     }
 }

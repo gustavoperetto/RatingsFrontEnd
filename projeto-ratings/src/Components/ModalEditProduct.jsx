@@ -1,34 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import './Modal.css';
+import './ModalEditProduct.css';
 import axios from 'axios';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
-function Modal({ show, onClose }) {
+function ModalEditProduct({ show, onClose, product }) {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
   const [productStock, setProductStock] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [productImage, setProductImage] = useState(null);
+
+  useEffect(() => {
+    if (product) {
+      setProductName(product.name || '');
+      setProductDescription(product.description || '');
+      setProductPrice(product.price || '');
+      setProductStock(product.stockQuantity || '');
+      setSelectedCategory(product.categoryId || '');
+    }
+  }, [product]);
 
   useEffect(() => {
     if (show) {
-      axios.get('http://localhost:8080/categories')
-        .then(res => {
-          setCategories(res.data);
-        })
-        .catch(err => console.error('Error loading categories:', err));
+      axios
+        .get('http://localhost:8080/categories')
+        .then((res) => setCategories(res.data))
+        .catch((err) => console.error('Error loading categories:', err));
     }
   }, [show]);
 
-  const handleImageChange = (event) => {
-    setProductImage(event.target.files[0]);
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const newProduct = {
+    const updatedProduct = {
+      id: product.id,
       name: productName,
       description: productDescription,
       price: parseFloat(productPrice),
@@ -37,23 +48,12 @@ function Modal({ show, onClose }) {
     };
 
     try {
-      const productResponse = await axios.post('http://localhost:8080/products', newProduct);
-      const productId = productResponse.data.id;
-
-      if (productImage && productId) {
-        const formData = new FormData();
-        formData.append('file', productImage);
-        formData.append('productId', productId);
-        formData.forEach((value, key) => console.log(key, value));
-        await axios.post('http://localhost:8080/products/product-images', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-      }
-      alert('Produto adicionado com sucesso');
+      await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct);
+      alert('Product updated successfully');
       onClose();
-    } catch (e) {
-      alert('Erro ao adicionar produto: ' + e.message);
-      console.error('Erro ao adicionar produto:', e);
+      window.location.reload();
+    } catch (error) {
+      alert('Error updating the product: ' + error.message);
     }
   };
 
@@ -64,10 +64,10 @@ function Modal({ show, onClose }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>Add Product</h2>
+        <h2>Edit Product</h2>
         <form onSubmit={handleSubmit}>
           <label>
-            Name of the product:
+            Name:
             <input
               type="text"
               value={productName}
@@ -106,26 +106,23 @@ function Modal({ show, onClose }) {
             Category:
             <select
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
+              onChange={handleCategoryChange}
               required
             >
-              <option value="" disabled>Select a category</option>
-              {categories.map(category => (
+              <option value="" disabled>
+                Select a category
+              </option>
+              {categories.map((category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
               ))}
             </select>
           </label>
-          <label>
-            Image:
-            <input
-              type="file"
-              onChange={handleImageChange}
-            />
-          </label>
           <div className="modal-buttons">
-            <button type="button" onClick={onClose}>Cancel</button>
+            <button type="button" onClick={onClose}>
+              Cancel
+            </button>
             <button type="submit">Save</button>
           </div>
         </form>
@@ -134,4 +131,4 @@ function Modal({ show, onClose }) {
   );
 }
 
-export default Modal;
+export default ModalEditProduct;

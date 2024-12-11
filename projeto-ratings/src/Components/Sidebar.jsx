@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onToggleVisible, onAddProduct }) {
+function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale }) {
     return (
         <div>
             <div className="sidebar">
@@ -22,13 +22,13 @@ function Sidebar({ onToggleVisible, onAddProduct }) {
                                 <a href="#" className="p-link">Categories</a>
                             </li>
                             <li className="p-menuitem">
-                                <a href="#" className="p-link">Sale</a>
+                                <a onClick={onAddSale} className="p-link">Sale Manager</a>
                             </li>
                             <li className="p-menuitem">
                                 <a onClick={onAddProduct} className="p-link">Add Product</a>
                             </li>
                             <li className="p-menuitem">
-                                <a className="p-link">Add Category</a>
+                                <a onClick={onAddCategory} className="p-link">Category Manager</a>
                             </li>
                             <li className="p-menuitem">
                                 <a href="#" className="p-link">Account</a>
