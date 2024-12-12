@@ -7,19 +7,17 @@
     margin: 0 auto;
     margin-top: 2%;
     padding: 15px;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
     background-color: #0c111b;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
     overflow: visible;
-    border-top: #BE00FF 2px solid;
+    border-top: #a686b1 2px solid;
 }
 
 .footer-left h3 {
     font-size: 18px;
     color: white;
     margin-bottom: 10px;
-    text-shadow: 1px 0.1px #BE00FF;
+    text-shadow: 1px 0.1px #a686b1;
     font-weight: 900;
 }
 
@@ -50,7 +48,7 @@
 }
 
 .footer-copy {
-    text-shadow: 1px 0.1px #BE00FF;
+    text-shadow: 1px 0.1px #a686b1;
     margin-top: 45px;
     font-size: 10px;
 }
@@ -62,9 +60,9 @@
         padding: 50px;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        border-top: #BE00FF 0.5px groove;
-        border-left: #BE00FF 0.5px groove;
-        border-right: #BE00FF 0.5px groove;
+        border-top: #a686b1 0.5px groove;
+        border-left: #a686b1 0.5px groove;
+        border-right: #a686b1 0.5px groove;
     }
 
     .footer-left {
@@ -75,7 +73,7 @@
 
     .footer-left h3 {
         font-size: 40px;
-        border-bottom: #BE00FF 0.5px groove;
+        border-bottom: #a686b1 0.5px groove;
     }
 
     .footer-right {

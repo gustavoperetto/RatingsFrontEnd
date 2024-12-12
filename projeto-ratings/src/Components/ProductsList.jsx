@@ -53,10 +53,12 @@ function ProductsList({ query, onEditProduct }) {
         <div className='products-grid'>
           {filteredProducts.map(product =>
             <div className='products-grid-item' key={product.id}>
+              <div className='products-grid-item-hover'>
+                <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+              </div>
               <div className='products-grid-image'>
                 {/* <img src="favorito.png" alt="favorite" className='item-icon' /> */}
-                <img src="apagar.png" alt="delete" className='item-icon-delete' onClick={() => handleDelete(product.id)} />
-                <img src="editar.png" alt="edit" className='item-icon-edit' onClick={() => onEditProduct(product)} />
                 <img src={`http://localhost:8080/products/product-images/${product.id}`} alt={product.name} className='product-image' />
               </div>
               <h4>

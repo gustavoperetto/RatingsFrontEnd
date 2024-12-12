@@ -1,11 +1,13 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale }) {
+function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, className }) {
     return (
         <div>
-            <div className="sidebar">
-                <img src="settings.png" alt="sidebar" className="settings-icon" onClick={onToggleVisible} />
+            <div className={`sidebar ${className}`}>
+                <div className='navbar-icon'>
+                    <ion-icon name="menu-outline" onClick={onToggleVisible}></ion-icon>
+                </div>
                 <img src="movies-podcast.png" alt="Ratings" className="ratings_logo" />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12">

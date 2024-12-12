@@ -2,6 +2,7 @@
     to {
         transform: rotate(0deg);
     }
+
     from {
         transform: rotate(360deg);
     }
@@ -94,6 +95,10 @@
     animation: spin 1s ease-out infinite;
 }
 
+.products-grid-item-hover {
+    display: none;
+}
+
 @media (min-width: 1024px) {
     .products-grid {
         margin-bottom: 40px;
@@ -115,5 +120,43 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .products-grid-item {
+        transition: 0.2s ease-in-out;
+        position: relative;
+    }
+
+    .products-grid-item:hover>.products-grid-item-hover {
+        opacity: 1;
+    }
+
+    .products-grid-item-hover {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row;
+        height: 80%;
+        width: 100%;
+        backdrop-filter: blur(10px);
+        z-index: 2;
+        opacity: 0;
+        border-radius: 10px;
+        gap: 10px;
+    }
+
+    .products-grid-item-hover ion-icon {
+        color: black;
+        width: 32px;
+        height: 32px;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 50%;
+        background-color: rgba(166, 134, 177, .2);
+    }
+
+    .products-grid-item-hover ion-icon:hover {
+        background-color: rgba(166, 134, 177, 1);
     }
 }

@@ -1,14 +1,18 @@
 import React from "react";
 import "./Navbar.css";
 
-function Navbar({ onToggleVisible }) {
-  
+function Navbar({ onToggleVisible, onShopCart, className }) {
+
   return (
-    <div className="navbar">
-        <img src="cart-52.png" alt="shop" className="shop_logo"/>
-      <h1>Ratings</h1>
-      <img src="settings.png" alt="settings" className="settings-icon" onClick={onToggleVisible}/>
+    <div className={`navbar ${className}`}>
+      <div className="shopcart-icon">
+        <ion-icon name="cart-outline" onClick={onShopCart}></ion-icon>
       </div>
+      <h1>Ratings</h1>
+      <div className="sidebar-icon">
+        <ion-icon name="menu-outline" onClick={onToggleVisible}></ion-icon>
+      </div>
+    </div>
   );
 }
 
