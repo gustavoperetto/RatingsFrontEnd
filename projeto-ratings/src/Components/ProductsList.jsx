@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ProductsList.css';
 
-function ProductsList({ query, onEditProduct }) {
+function ProductsList({ query, onEditProduct, products, setProducts, onNotify }) {
 
-  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(function () {
@@ -14,7 +13,7 @@ function ProductsList({ query, onEditProduct }) {
         setFilteredProducts(res.data);
       })
       .catch(err => console.log(err));
-  }, []);
+  }, [setProducts]);
 
   useEffect(() => {
     if (query) {
@@ -36,9 +35,10 @@ function ProductsList({ query, onEditProduct }) {
       const updatedProducts = products.filter(product => product.id !== productId);
       setProducts(updatedProducts);
       setFilteredProducts(updatedProducts);
-      alert('Successfully deleted');
+      onNotify('Successfully deleted', 'success');
     } catch (error) {
-      alert('Eror deleting product');
+      onNotify('Error deleting product.', 'error');
+      console.error('Error:', error);
     }
   }
 
@@ -59,7 +59,11 @@ function ProductsList({ query, onEditProduct }) {
               </div>
               <div className='products-grid-image'>
                 {/* <img src="favorito.png" alt="favorite" className='item-icon' /> */}
-                <img src={`http://localhost:8080/products/product-images/${product.id}`} alt={product.name} className='product-image' />
+                <div className='products-grid-icon-admin'>
+                  <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                  <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                </div>
+                <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
               </div>
               <h4>
                 {product.name}

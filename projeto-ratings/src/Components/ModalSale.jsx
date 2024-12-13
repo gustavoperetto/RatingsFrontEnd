@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './ModalSale.css';
 import axios from 'axios';
 
-function ModalSale({ show, onClose }) {
+function ModalSale({ show, onClose, onNotify }) {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productNewPrice, setProductNewPrice] = useState('');
@@ -14,6 +14,9 @@ function ModalSale({ show, onClose }) {
                     setProducts(res.data);
                 })
                 .catch(err => console.error('Error loading products:', err));
+        } else {
+            setSelectedProduct(null);
+            setProductNewPrice('');
         }
     }, [show]);
 
@@ -32,22 +35,31 @@ function ModalSale({ show, onClose }) {
         event.preventDefault();
 
         if (!selectedProduct || !productNewPrice) {
-            alert('Please select a product and enter a new price.');
+            onNotify('Please select a product and enter a new price.', 'error');
+            onClose();
+            return;
+        }
+
+        const newPrice = parseFloat(productNewPrice);
+        if (newPrice >= selectedProduct.price) {
+            onNotify('The new price must be lower than the original price.', 'error');
+            onClose();
             return;
         }
 
         try {
-            await axios.put(`http://localhost:8080/products/sale/${selectedProduct.id}`, { price: parseFloat(productNewPrice) }, {
+            await axios.put(`http://localhost:8080/products/sale/${selectedProduct.id}`, { price: newPrice }, {
                 headers: {
                     'Content-Type': 'application/json',
                 }
             });
 
-            alert('New price updated successfully');
+            onNotify('New price updated successfully', 'success');
             onClose();
-            window.location.reload();
-        } catch (e) {
-            alert('Error updating the price: ' + e.message);
+        } catch (error) {
+            onNotify('Error updating the price.', 'error');
+            console.error('Error:', error);
+            onClose();
         }
     };
 
@@ -56,7 +68,7 @@ function ModalSale({ show, onClose }) {
     }
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-overlay-sale">
             <div className="modal">
                 <h2>Sale Manager</h2>
                 <form onSubmit={handleSubmit}>

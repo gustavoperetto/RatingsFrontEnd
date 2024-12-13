@@ -99,6 +99,30 @@
     display: none;
 }
 
+.products-grid-icon-admin {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 5px;
+    left: -10px;
+    height: 80px;
+    width: 80px;
+    border-radius: 10px;
+    gap: 10px;
+}
+
+.products-grid-icon-admin ion-icon {
+    color: black;
+    width: 32px;
+    height: 32px;
+    padding: 7px;
+    border-radius: 50%;
+    background-color: rgba(166, 134, 177, 1);
+    opacity: 1;
+}
+
 @media (min-width: 1024px) {
     .products-grid {
         margin-bottom: 40px;
@@ -127,6 +151,9 @@
         position: relative;
     }
 
+    .products-grid-icon-admin {
+        display: none;
+    }
     .products-grid-item:hover>.products-grid-item-hover {
         opacity: 1;
     }

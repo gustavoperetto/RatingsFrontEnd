@@ -30,6 +30,7 @@ function ModalShopCart({ show, onClose, customerId }) {
             fetchCartItems();
         } catch (error) {
             console.error('Error updating quantity:', error);
+            onClose();
         }
     };
 

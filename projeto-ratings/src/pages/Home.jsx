@@ -7,6 +7,7 @@ import ModalCategory from '../Components/ModalCategory';
 import ModalSale from '../Components/ModalSale';
 import ModalEditProduct from '../Components/ModalEditProduct';
 import ModalShopCart from '../Components/ModalShopCart';
+import Notification from '../Components/Notification';
 import './Home.css';
 import ProductsList from '../Components/ProductsList';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -18,12 +19,14 @@ function Home() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isNavbarVisible, setNavbarVisible] = useState(true);
   const [isAnimatingOut, setAnimatingOut] = useState(false);
+  const [products, setProducts] = useState([]);
   const [showModalProduct, setShowModalProduct] = useState(false);
   const [showModalCategory, setShowModalCategory] = useState(false);
   const [showModalSale, setShowModalSale] = useState(false);
   const [showModalEditProduct, setShowModalEditProduct] = useState(false);
   const [showModalShopCart, setShowModalShopCart] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
+  const [notification, setNotification] = useState({ message: '', type: '' });
   const [query, setQuery] = useState('');
 
   const isAnyModalOpen =
@@ -46,24 +49,35 @@ function Home() {
 
   const handleToggle = (target) => {
     if (target === "sidebar" && isNavbarVisible) {
-      setAnimatingOut(true); // Inicia a animação de saída da Navbar
+      setAnimatingOut(true);
       setTimeout(() => {
-        setNavbarVisible(false); // Esconde a Navbar após a animação
-        setSidebarVisible(true); // Mostra a Sidebar
-        setAnimatingOut(false); // Conclui a animação
+        setNavbarVisible(false);
+        setSidebarVisible(true);
+        setAnimatingOut(false);
       }, 500); 
     } else if (target === "navbar" && isSidebarVisible) {
-      setAnimatingOut(true); // Inicia a animação de saída da Sidebar
+      setAnimatingOut(true); 
       setTimeout(() => {
-        setSidebarVisible(false); // Esconde a Sidebar após a animação
-        setNavbarVisible(true); // Mostra a Navbar
-        setAnimatingOut(false); // Conclui a animação
-      }, 500); // Tempo da animação
+        setSidebarVisible(false);
+        setNavbarVisible(true);
+        setAnimatingOut(false);
+      }, 500);
     }
   };
+
+  const updateProducts = (updatedProductList) => {
+    setProducts(updatedProductList);
+  };
+
+  const showNotification = (message, type = 'success') => {
+    setNotification({ message, type });
+    setTimeout(() => handleCloseNotification(), 3000);
+  };
   
-
-
+  const handleCloseNotification = () => {
+    setNotification({ message: '', type: '' });
+  };
+  
   //Open Modals
   const handleOpenProductClick = () => {
     setShowModalProduct(true);
@@ -151,16 +165,17 @@ function Home() {
           </form>
         </div>
         <div className='products-grid-root'>
-          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} />
+          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification}/>
         </div>
         <div className='home-footer'>
           <Footer />
         </div>
-        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} />
-        <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} />
-        <ModalSale show={showModalSale} onClose={handleCloseModalSale} />
-        <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} />
-        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} />
+        <Notification message={notification.message} type={notification.type} onClose={handleCloseNotification} />
+        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification}/>
+        <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification}/>
+        <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification}/>
+        <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification}/>
+        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification}/>
       </div>
     </>
   );

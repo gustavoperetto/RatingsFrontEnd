@@ -4,7 +4,7 @@ import axios from 'axios';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-function ModalEditProduct({ show, onClose, product }) {
+function ModalEditProduct({ show, onClose, product, onNotify }) {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
@@ -49,11 +49,12 @@ function ModalEditProduct({ show, onClose, product }) {
 
     try {
       await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct);
-      alert('Product updated successfully');
+      onNotify('Product updated successfully', 'success');
       onClose();
-      window.location.reload();
     } catch (error) {
-      alert('Error updating the product: ' + error.message);
+      onNotify('Error updating the product.', 'error');
+      console.error('Error:', error);
+      onClose();
     }
   };
 
@@ -62,7 +63,7 @@ function ModalEditProduct({ show, onClose, product }) {
   }
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay-EditProduct">
       <div className="modal">
         <h2>Edit Product</h2>
         <form onSubmit={handleSubmit}>

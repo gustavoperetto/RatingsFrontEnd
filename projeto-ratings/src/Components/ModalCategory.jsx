@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './ModalProduct.css';
+import './ModalCategory.css';
 import axios from 'axios';
 
-function ModalProduct({ show, onClose }) {
+function ModalProduct({ show, onClose, onNotify }) {
     const [categoryName, setCategoryName] = useState('');
     const [categoryDescription, setCategoryDescription] = useState('');
     const [categories, setCategories] = useState([]);
@@ -16,6 +16,11 @@ function ModalProduct({ show, onClose }) {
                     setCategories(res.data);
                 })
                 .catch(err => console.error('Error loading categories:', err));
+        } else {
+            setCategoryName('');
+            setCategoryDescription('');
+            setSelectedCategory('');
+            setOperation('');
         }
     }, [show]);
 
@@ -39,22 +44,22 @@ function ModalProduct({ show, onClose }) {
 
             try {
                 await axios.post('http://localhost:8080/categories', newCategory);
-                alert('Categoria adicionada com sucesso');
+                onNotify('Category added successfully!');
                 onClose();
-                window.location.reload();
-            } catch (e) {
-                alert('Erro ao adicionar categoria: ' + e.message);
-                console.error('Erro ao adicionar categoria:', e);
+            } catch (error) {
+                onNotify('Error adding category.');
+                console.error('Error:', error);
+                onClose();
             }
         } else if (operation === 'delete') {
             try {
                 await axios.delete(`http://localhost:8080/categories/${selectedCategory}`);
-                alert('Categoria deletada com sucesso');
+                onNotify('Category deleted successfully!');
                 onClose();
-                window.location.reload();
-            } catch (e) {
-                alert('Erro ao deletar categoria: ' + e.message);
-                console.error('Erro ao deletar categoria:', e);
+            } catch (error) {
+                onNotify('Error adding category.');
+                console.error('Error:', error);
+                onClose();
             }
         }
     };
@@ -64,7 +69,7 @@ function ModalProduct({ show, onClose }) {
     }
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-overlay-category">
             <div className="modal">
                 <h2>Category Manager</h2>
                 <form onSubmit={handleSubmit}>

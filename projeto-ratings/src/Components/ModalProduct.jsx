@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './ModalProduct.css';
 import axios from 'axios';
 
-function ModalProduct({ show, onClose }) {
+function ModalProduct({ show, onClose, onNotify }) {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
@@ -18,6 +18,13 @@ function ModalProduct({ show, onClose }) {
           setCategories(res.data);
         })
         .catch(err => console.error('Error loading categories:', err));
+    } else {
+      setProductName('');
+      setProductDescription('');
+      setProductPrice('');
+      setProductStock('');
+      setSelectedCategory('');
+      setProductImage(null);
     }
   }, [show]);
 
@@ -53,12 +60,12 @@ function ModalProduct({ show, onClose }) {
           headers: { 'Content-Type': 'multipart/form-data' }
         });
       }
-      alert('Produto adicionado com sucesso');
+      onNotify('Product added sucessfully', 'success');
       onClose();
-      window.location.reload();
-    } catch (e) {
-      alert('Erro ao adicionar produto: ' + e.message);
-      console.error('Erro ao adicionar produto:', e);
+    } catch (error) {
+      onNotify('Error adding product.', 'error');
+      console.error('Error:', error);
+      onClose();
     }
   };
 
@@ -67,7 +74,7 @@ function ModalProduct({ show, onClose }) {
   }
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay-product">
       <div className="modal">
         <h2>Add Product</h2>
         <form onSubmit={handleSubmit}>

@@ -1,4 +1,4 @@
-.modal-overlay {
+.modal-overlay-product {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,13 +12,13 @@
     z-index: 1200;
   }
   
-  .modal {
+  .modal-overlay-product .modal {
     background: #111827;
     border-radius: 12px;
     padding: 25px;
     width: 400px;
     max-width: 90%;
-    box-shadow: 0 5px 15px #BE00FF;
+    box-shadow: 0 5px 20px hsl(285, 22%, 51%);
     animation: fadeIn 0.4s ease-out;
     display: flex;
     flex-direction: column;
@@ -36,23 +36,24 @@
     }
   }
   
-  .modal h2 {
+  .modal-overlay-product .modal h2 {
     font-size: 22px;
     margin-bottom: 15px;
     color: white;
-    border-bottom: 2px solid #BE00FF;
+    border-bottom: 2px solid #a686b1;
     padding-bottom: 8px;
     text-align: center;
   }
   
-  .modal label {
+  .modal-overlay-product .modal label {
     font-size: 16px;
     color: white;
     display: flex;
     flex-direction: column;
   }
   
-  .modal input,select {
+  .modal-overlay-product .modal input,select {
+    width: 100%;
     margin-top: 8px;
     padding: 10px;
     border: 1px solid #ccc;
@@ -62,35 +63,41 @@
     transition: border-color 0.3s;
   }
   
-  .modal input:focus {
-    border-color: #BE00FF;
+  .modal-overlay-product .modal input:focus {
+    border-color: hsl(285, 22%, 51%);
     outline: none;
   }
   
-  .modal button {
-    background-color: #BE00FF;
+  .modal-overlay-product .modal button {
+    background-color: #a686b1;
     color: white;
     padding: 12px;
     font-size: 16px;
-    border: none;
-    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    border-radius: 15px;
     cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition: all 0.3s ease-out;
     margin-top: 10px;
-    width: 50%;
+    width: 120px;
+    margin-left: 20px;
   }
   
-  .modal button:hover {
-    background-color: #660088;
+  .modal-overlay-product .modal button:hover {
+    background-color: hsl(285, 22%, 51%);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
   }
 
-  @media (max-width: 1024px) {
-    .modal {
-      width: 95%;
+  @media (min-width: 1024px) {
+    .modal-overlay-product .modal label {
+      margin-top: 5px;
+      font-size: 20px;
     }
-  
-    .modal h2 {
+
+    .modal-overlay-product .modal button {
       font-size: 18px;
+      width: 120px;
+      margin-top: 30px;
+      margin-left: 35px;
     }
   }
