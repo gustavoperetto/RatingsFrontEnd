@@ -15,6 +15,8 @@ import { Pagination, Scrollbar, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
+import axios from 'axios';
+
 function Home() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isNavbarVisible, setNavbarVisible] = useState(true);
@@ -28,6 +30,15 @@ function Home() {
   const [productToEdit, setProductToEdit] = useState(null);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [query, setQuery] = useState('');
+
+  useEffect(function () {
+    axios.get('http://localhost:8080/products')
+      .then(res => {
+        setProducts(res.data);
+        setFilteredProducts(res.data);
+      })
+      .catch(err => console.log(err));
+  }, []);
 
   const isAnyModalOpen =
     showModalProduct ||

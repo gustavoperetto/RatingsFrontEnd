@@ -5,16 +5,7 @@ import './ProductsList.css';
 function ProductsList({ query, onEditProduct, products, setProducts, onNotify }) {
 
   const [filteredProducts, setFilteredProducts] = useState([]);
-
-  useEffect(function () {
-    axios.get('http://localhost:8080/products')
-      .then(res => {
-        setProducts(res.data);
-        setFilteredProducts(res.data);
-      })
-      .catch(err => console.log(err));
-  }, [setProducts]);
-
+  
   useEffect(() => {
     if (query) {
       const filtered = products.filter(product =>
