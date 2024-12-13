@@ -5,7 +5,15 @@ import './ProductsList.css';
 function ProductsList({ query, onEditProduct, products, setProducts, onNotify }) {
 
   const [filteredProducts, setFilteredProducts] = useState([]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+  const shouldShowPagination = totalPages > 1 && !query;
+
+
   useEffect(() => {
     if (query) {
       const filtered = products.filter(product =>
@@ -16,6 +24,18 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
       setFilteredProducts(products);
     }
   }, [query, products]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
 
   const handleDelete = async (productId) => {
     if (isNaN(productId)) {
@@ -37,36 +57,35 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
     <>
       {filteredProducts.length === 0 &&
         <div className='products-grid-loading'>
-          <div className='loading-spinner'>
-          </div>
+          <div className='loading-spinner'></div>
         </div>}
       {filteredProducts.length > 0 &&
-        <div className='products-grid'>
-          {filteredProducts.map(product =>
-            <div className='products-grid-item' key={product.id}>
-              <div className='products-grid-item-hover'>
-                <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
-                <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
-              </div>
-              <div className='products-grid-image'>
-                {/* <img src="favorito.png" alt="favorite" className='item-icon' /> */}
-                <div className='products-grid-icon-admin'>
+        <>
+          <div className='products-grid'>
+            {paginatedProducts.map(product => (
+              <div className='products-grid-item' key={product.id}>
+                <div className='products-grid-item-hover'>
                   <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
                   <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
                 </div>
-                <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
+                <div className='products-grid-image'>
+                  <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
+                </div>
+                <h4>{product.name}</h4>
+                <span>R$ {product.price.toFixed(2)}</span>
               </div>
-              <h4>
-                {product.name}
-              </h4>
-              <span>
-                R$ {product.price.toFixed(2)}
-              </span>
+            ))}
+          </div>
+          {shouldShowPagination && (
+            <div className="pagination-controls">
+              <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
+              <span>Página {currentPage} de {totalPages}</span>
+              <button onClick={handleNextPage} disabled={currentPage === totalPages}>Próxima</button>
             </div>
           )}
-        </div>}
+        </>}
     </>
-  )
-}
+  );
+};
 
 export default ProductsList;

@@ -123,6 +123,25 @@
     opacity: 1;
 }
 
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-controls button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+
 @media (min-width: 1024px) {
     .products-grid {
         margin-bottom: 40px;
@@ -142,6 +161,7 @@
     .products-grid-icon-admin {
         display: none;
     }
+
     .products-grid-item:hover>.products-grid-item-hover {
         opacity: 1;
     }
