@@ -78,9 +78,9 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
           </div>
           {shouldShowPagination && (
             <div className="pagination-controls">
-              <button onClick={handlePreviousPage} disabled={currentPage === 1}>Anterior</button>
-              <span>Página {currentPage} de {totalPages}</span>
-              <button onClick={handleNextPage} disabled={currentPage === totalPages}>Próxima</button>
+              <button onClick={handlePreviousPage} disabled={currentPage === 1}>Before</button>
+              <span>Page {currentPage} of {totalPages}</span>
+              <button onClick={handleNextPage} disabled={currentPage === totalPages}>After</button>
             </div>
           )}
         </>}

@@ -12,7 +12,7 @@ function Footer() {
                     9:00 AM to 3:00 PM - Saturday, <br />
                     Brasília Time Zone (Except Sundays and holidays) <br />
                     Address: <br />
-                    Rua Carlos Gomes, 1321 - 9th floor - Downtown <br />
+                    Carlos Gomes, 1321 - 9th floor - Downtown <br />
                     Joinville/SC - ZIP: 89220-000
                 </span>
             </div>

@@ -15,7 +15,7 @@
     left: 50%;
     top: 8%;
     transform: translate(-50%, -50%);
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-weight: 700;
     font-size: 1.3rem;
     text-transform: uppercase;
@@ -76,7 +76,7 @@
 @media (min-width:1024px) {
     .products-grid-root {
         max-width: 70%;
-        height: 60vh;
+        height: 100%;
         display: flex;
         flex-flow: column wrap;
         margin: 0 auto;
