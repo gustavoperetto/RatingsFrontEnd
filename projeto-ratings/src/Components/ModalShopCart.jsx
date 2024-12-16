@@ -11,11 +11,10 @@ function ModalShopCart({ show, onClose, onNotify }) {
         }
     }, [show]);
 
-    const updateCartItem = (id, quantity) => {
+    const updateCartItem = (id, newQuantity) => {
         const updatedCart = cartItems.map(item =>
-            item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
-        ).filter(item => item.quantity > 0);
-
+            item.id === id ? { ...item, quantity: Math.max(1, newQuantity) } : item
+        );
         setCartItems(updatedCart);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
@@ -26,6 +25,7 @@ function ModalShopCart({ show, onClose, onNotify }) {
         localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
+
     const calculateTotal = () => {
         return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
     };
@@ -35,6 +35,13 @@ function ModalShopCart({ show, onClose, onNotify }) {
         onNotify('Cart saved to LocalStorage!', 'success');
         onClose();
     };
+
+    const handleCloseModal = () => {
+        const cartUpdatedEvent = new CustomEvent('cartUpdated');
+        window.dispatchEvent(cartUpdatedEvent);
+        onClose();
+    };
+
 
     if (!show) return null;
 
@@ -57,6 +64,7 @@ function ModalShopCart({ show, onClose, onNotify }) {
                                             <ion-icon name="add-outline" onClick={() => updateCartItem(item.id, item.quantity + 1)}></ion-icon>
                                             <span>{item.quantity}</span>
                                             <ion-icon name="remove-outline" onClick={() => updateCartItem(item.id, item.quantity - 1)}></ion-icon>
+
                                         </div>
                                     </div>
                                     <div className='cart-remove'>
@@ -69,7 +77,7 @@ function ModalShopCart({ show, onClose, onNotify }) {
                             <h3>Total: R$ {calculateTotal()}</h3>
                         </div>
                         <div className="cart-actions">
-                            <button onClick={onClose}>Continue Shopping</button>
+                            <button onClick={handleCloseModal}>Continue Shopping</button>
                             <button onClick={handleSaveCart}>To Buy</button>
                         </div>
                     </>
@@ -77,7 +85,7 @@ function ModalShopCart({ show, onClose, onNotify }) {
                     <>
                         <div className='cart-empty'>
                             <p>Your cart is empty!</p>
-                            <ion-icon name="close-outline" onClick={onClose}></ion-icon>
+                            <ion-icon name="close-outline" onClick={handleCloseModal}></ion-icon>
                         </div>
                     </>
                 )}

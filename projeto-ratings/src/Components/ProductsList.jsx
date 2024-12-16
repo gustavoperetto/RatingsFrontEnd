@@ -42,14 +42,20 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
     const existingItem = currentCart.find(item => item.id === product.id);
 
     if (existingItem) {
-      existingItem.quantity += 1;
+        existingItem.quantity += 1;
     } else {
-      currentCart.push({ ...product, quantity: 1 });
+        currentCart.push({ ...product, quantity: 1 });
     }
 
     localStorage.setItem('cart', JSON.stringify(currentCart));
+
+    const cartUpdatedEvent = new CustomEvent('cartUpdated');
+    window.dispatchEvent(cartUpdatedEvent);
+
     onNotify('Item added to cart!', 'success');
-  };
+};
+
+
 
 
   const handleDelete = async (productId) => {

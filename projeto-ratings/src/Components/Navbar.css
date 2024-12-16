@@ -7,7 +7,7 @@
     background-color: #111827;
     display: flex;
     z-index: 1000;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-weight: 700;
@@ -51,20 +51,19 @@
 .sidebar-icon ion-icon {
     width: 42px;
     height: 42px;
-    position: absolute;
-    left: 6%;
-    top: 10%;
     cursor: pointer;
     color: #a686b1;
 }
 
 .shopcart-icon ion-icon {
-    position: absolute;
     width: 42px;
     height: 42px;
-    right: 6%;
-    top: 10%;
     color: #a686b1;
+}
+
+.navbar .sidebar-icon ion-icon:active {
+    transform: rotate(90deg);
+    transition: 1s;
 }
 
 @media (min-width: 1024px) {
@@ -78,25 +77,19 @@
     .sidebar-icon ion-icon {
         width: 42px;
         height: 42px;
-        position: absolute;
-        left: 6%;
-        top: 5%;
         cursor: pointer;
         color: #a686b1;
+        margin-left: 85px;
     }
 
     .shopcart-icon ion-icon {
-        position: absolute;
         width: 42px;
         height: 42px;
-        right: 6%;
-        top: 5%;
         color: #a686b1;
         cursor: pointer;
+        margin-right: 85px;
+        position: relative;
     }
 
-    .navbar .sidebar-icon ion-icon:active {
-        transform: rotate(90deg);
-        transition: 1s;
-    }
+    
 }

@@ -30,6 +30,7 @@ function Home() {
   const [productToEdit, setProductToEdit] = useState(null);
   const [notification, setNotification] = useState({ message: '', type: '' });
   const [query, setQuery] = useState('');
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(function () {
     axios.get('http://localhost:8080/products')
@@ -38,6 +39,16 @@ function Home() {
       })
       .catch(err => console.log(err));
   }, []);
+
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    setCartItems(cart);
+  }, []);
+
+  const updateCartItems = (newCartItems) => {
+    setCartItems(newCartItems);
+    localStorage.setItem('cart', JSON.stringify(newCartItems));
+  };
 
   const isAnyModalOpen =
     showModalProduct ||
@@ -64,9 +75,9 @@ function Home() {
         setNavbarVisible(false);
         setSidebarVisible(true);
         setAnimatingOut(false);
-      }, 500); 
+      }, 500);
     } else if (target === "navbar" && isSidebarVisible) {
-      setAnimatingOut(true); 
+      setAnimatingOut(true);
       setTimeout(() => {
         setSidebarVisible(false);
         setNavbarVisible(true);
@@ -83,11 +94,11 @@ function Home() {
     setNotification({ message, type });
     setTimeout(() => handleCloseNotification(), 3000);
   };
-  
+
   const handleCloseNotification = () => {
     setNotification({ message: '', type: '' });
   };
-  
+
   //Open Modals
   const handleOpenProductClick = () => {
     setShowModalProduct(true);
@@ -139,6 +150,7 @@ function Home() {
             onToggleVisible={() => handleToggle("sidebar")}
             onShopCart={handleOpenShopCartClick}
             className={isAnimatingOut ? "animating-out" : ""}
+            cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)}
           />)}
           {isSidebarVisible && (<Sidebar
             onToggleVisible={() => handleToggle("navbar")}
@@ -175,17 +187,17 @@ function Home() {
           </form>
         </div>
         <div className='products-grid-root'>
-          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification}/>
+          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification} />
         </div>
         <div className='home-footer'>
           <Footer />
         </div>
         <Notification message={notification.message} type={notification.type} onClose={handleCloseNotification} />
-        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification}/>
-        <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification}/>
-        <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification}/>
-        <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification}/>
-        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification}/>
+        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification} />
+        <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification} />
+        <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification} />
+        <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification} />
+        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} />
       </div>
     </>
   );
