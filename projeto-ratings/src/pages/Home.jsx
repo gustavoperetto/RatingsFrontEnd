@@ -35,7 +35,6 @@ function Home() {
     axios.get('http://localhost:8080/products')
       .then(res => {
         setProducts(res.data);
-        setFilteredProducts(res.data);
       })
       .catch(err => console.log(err));
   }, []);
@@ -168,7 +167,7 @@ function Home() {
           </Swiper>
         </div>
         <div className='home-navbar'>
-          <h2>Produtos</h2>
+          <h2>Products</h2>
           <form>
             <label>
               <input type="text" onChange={e => setQuery(e.target.value)} placeholder="Search for a product" />

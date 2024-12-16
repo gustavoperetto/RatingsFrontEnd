@@ -82,12 +82,13 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
                 <div className='products-grid-item-hover'>
                   <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
                   <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
-                  {/* <button className='products-grid-addcart' onClick={() => handleAddToCart(product)}>Add to cart</button> */}
+                  <ion-icon name="cart-outline" onClick={() => handleAddToCart(product)}></ion-icon>
                 </div>
                 <div className='products-grid-image'>
                   <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
                   <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
                   <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                  <ion-icon name="cart-outline" onClick={() => handleAddToCart(product)}></ion-icon>
                 </div>
                 <h4>{product.name}</h4>
                 <span>R$ {product.price.toFixed(2)}</span>

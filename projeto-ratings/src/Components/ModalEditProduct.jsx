@@ -51,6 +51,7 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
       await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct);
       onNotify('Product updated successfully', 'success');
       onClose();
+      location.reload();
     } catch (error) {
       onNotify('Error updating the product.', 'error');
       console.error('Error:', error);

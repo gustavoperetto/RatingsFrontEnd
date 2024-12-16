@@ -56,6 +56,7 @@ function ModalProduct({ show, onClose, onNotify }) {
                 await axios.delete(`http://localhost:8080/categories/${selectedCategory}`);
                 onNotify('Category deleted successfully!');
                 onClose();
+                location.reload();
             } catch (error) {
                 onNotify('Error adding category.');
                 console.error('Error:', error);
