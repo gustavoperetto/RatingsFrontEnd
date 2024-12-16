@@ -1,93 +1,187 @@
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(5px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1200;
-    overflow-y: hidden !important;
-  }
-  
-  .modal {
-    background: #111827;
-    border-radius: 12px;
-    padding: 25px;
-    width: 400px;
-    max-width: 90%;
-    box-shadow: 0 5px 15px #BE00FF;
-    animation: fadeIn 0.4s ease-out;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  .modal h2 {
-    font-size: 22px;
-    margin-bottom: 15px;
-    color: white;
-    border-bottom: 2px solid #BE00FF;
-    padding-bottom: 8px;
-    text-align: center;
-  }
-  
-  .modal label {
-    font-size: 16px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .modal input,select {
-    margin-top: 8px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    color: #34495e;
-    transition: border-color 0.3s;
-  }
-  
-  .modal input:focus {
-    border-color: #BE00FF;
-    outline: none;
-  }
-  
-  .modal button {
-    background-color: #BE00FF;
-    color: white;
-    padding: 12px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s, box-shadow 0.3s;
-    margin-top: 10px;
-    width: 50%;
-  }
-  
-  .modal button:hover {
-    background-color: #660088;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+.modal-overlay-shopcart {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+  overflow-y: scroll !important;
+}
+
+.modal-overlay-shopcart .modal {
+  background: #111827;
+  border-radius: 12px;
+  padding: 25px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 5px 20px hsl(285, 22%, 51%);
+  animation: fadeIn 0.4s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: white;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
   }
 
-  @media (max-width: 1024px) {
-    .modal h2 {
-      font-size: 18px;
-    }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
+}
+
+.modal-overlay-shopcart .modal h2 {
+  font-size: 25px;
+  margin-bottom: 15px;
+  color: white;
+  border-bottom: 2px solid #a686b1;
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+.modal-overlay-shopcart .cart-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-overlay-shopcart .modal button {
+  background-color: #a686b1;
+  color: white;
+  padding: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  margin-top: 10px;
+  width: 45%;
+  height: 55px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.modal-overlay-shopcart .cart-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-overlay-shopcart .cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  border: 1px solid #a686b1;
+  border-radius: 8px;
+  padding: 10px;
+  height: 110px;
+}
+
+.modal-overlay-shopcart .cart-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.cart-item-title-price {
+  width: 150px;
+  height: 50px;
+  margin-top: 12px;
+  margin-left: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cart-item-desc {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.modal-overlay-shopcart .quantity-controls {
+  margin: 0 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.cart-item ion-icon {
+  color: black;
+  width: 14px;
+  height: 14px;
+  padding: 7px;
+  border-radius: 50%;
+  background-color: rgba(166, 134, 177, 1);
+}
+
+.cart-remove ion-icon {
+  color: black;
+  width: 22px;
+  height: 22px;
+  padding: 7px;
+  border-radius: 50%;
+  background-color: rgba(166, 134, 177, 1);
+  cursor: pointer;
+}
+
+.cart-empty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.cart-empty ion-icon {
+  color: black;
+  width: 28px;
+  height: 28px;
+  padding: 7px;
+  margin-top: 20px;
+  border-radius: 50%;
+  background-color: rgba(166, 134, 177, 1);
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .modal-overlay-shopcart .modal h2 {
+    font-size: 25px;
+  }
+
+  .modal-overlay-shopcart .modal button:hover {
+    background-color: hsl(285, 22%, 51%);
+  }
+
+  .cart-item-title-price {
+    margin-left: 0;
+    width: 185px;
+  }
+
+  .cart-item ion-icon:hover {
+    background-color: rgba(166, 134, 177, 0.8);
+  }
+
+  .cart-empty ion-icon:hover {
+    background-color: rgba(166, 134, 177, 0.8);
+  }
+}

@@ -62,6 +62,7 @@ function ModalProduct({ show, onClose, onNotify }) {
       }
       onNotify('Product added sucessfully', 'success');
       onClose();
+      location.reload();
     } catch (error) {
       onNotify('Error adding product.', 'error');
       console.error('Error:', error);

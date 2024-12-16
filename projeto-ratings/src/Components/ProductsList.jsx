@@ -6,7 +6,7 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
 
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
@@ -36,6 +36,21 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
       setCurrentPage(currentPage - 1);
     }
   };
+
+  const handleAddToCart = (product) => {
+    const currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+    const existingItem = currentCart.find(item => item.id === product.id);
+
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      currentCart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem('cart', JSON.stringify(currentCart));
+    onNotify('Item added to cart!', 'success');
+  };
+
 
   const handleDelete = async (productId) => {
     if (isNaN(productId)) {
@@ -67,9 +82,12 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
                 <div className='products-grid-item-hover'>
                   <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
                   <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                  {/* <button className='products-grid-addcart' onClick={() => handleAddToCart(product)}>Add to cart</button> */}
                 </div>
                 <div className='products-grid-image'>
                   <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
+                  <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                  <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
                 </div>
                 <h4>{product.name}</h4>
                 <span>R$ {product.price.toFixed(2)}</span>

@@ -92,6 +92,7 @@
         right: 6%;
         top: 5%;
         color: #a686b1;
+        cursor: pointer;
     }
 
     .navbar .sidebar-icon ion-icon:active {

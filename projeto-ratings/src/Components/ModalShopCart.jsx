@@ -1,99 +1,85 @@
 import React, { useEffect, useState } from 'react';
 import './ModalShopCart.css';
-import axios from 'axios';
 
-function ModalShopCart({ show, onClose, customerId }) {
+function ModalShopCart({ show, onClose, onNotify }) {
     const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (show) {
-            fetchCartItems();
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            setCartItems(cart);
         }
     }, [show]);
 
-    const fetchCartItems = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.get(`http://localhost:8080/orders/${customerId}`);
-            setCartItems(response.data.items);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching cart items:', error);
-            setLoading(false);
-        }
+    const updateCartItem = (id, quantity) => {
+        const updatedCart = cartItems.map(item =>
+            item.id === id ? { ...item, quantity: Math.max(1, quantity) } : item
+        ).filter(item => item.quantity > 0);
+
+        setCartItems(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
-    const handleUpdateQuantity = async (orderItemId, quantity) => {
-        try {
-            await axios.put(`http://localhost:8080/orders/${customerId}/items/${orderItemId}`, { quantity });
-            fetchCartItems();
-        } catch (error) {
-            console.error('Error updating quantity:', error);
-            onClose();
-        }
+    const removeCartItem = (id) => {
+        const updatedCart = cartItems.filter(item => item.id !== id);
+        setCartItems(updatedCart);
+        localStorage.setItem('cart', JSON.stringify(updatedCart));
     };
 
-    const handleRemoveItem = async (orderItemId) => {
-        try {
-            await axios.delete(`http://localhost:8080/orders/${customerId}/items/${orderItemId}`);
-            fetchCartItems();
-        } catch (error) {
-            console.error('Error removing item:', error);
-        }
+    const calculateTotal = () => {
+        return cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0).toFixed(2);
     };
 
-    const handleCheckout = async () => {
-        try {
-            await axios.post(`http://localhost:8080/orders/${customerId}/checkout`);
-            alert('Purchase completed successfully!');
-            onClose();
-        } catch (error) {
-            console.error('Error during checkout:', error);
-        }
+    const handleSaveCart = () => {
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        onNotify('Cart saved to LocalStorage!', 'success');
+        onClose();
     };
 
-    if (!show) {
-        return null;
-    }
+    if (!show) return null;
 
     return (
-        <div className="modal-overlay">
+        <div className="modal-overlay-shopcart">
             <div className="modal">
                 <h2>Shopping Cart</h2>
-                {loading ? (
-                    <p>Loading...</p>
-                ) : cartItems.length > 0 ? (
-                    <div>
-                        <ul>
+                {cartItems.length > 0 ? (
+                    <>
+                        <ul className="cart-items">
                             {cartItems.map(item => (
-                                <li key={item.orderItemId} className="cart-item">
-                                    <div>
-                                        <strong>{item.productName}</strong>
-                                        <p>Price: ${item.price.toFixed(2)}</p>
-                                        <p>
-                                            Quantity:
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={item.quantity}
-                                                onChange={(e) =>
-                                                    handleUpdateQuantity(item.orderItemId, parseInt(e.target.value, 10))
-                                                }
-                                            />
-                                        </p>
+                                <li key={item.id} className="cart-item">
+                                    <img src={`http://localhost:8080/products/product-images/${item.id}`} alt={item.name} />
+                                    <div className='cart-item-desc'>
+                                        <div className='cart-item-title-price'>
+                                            <h4>{item.name}</h4>
+                                            <p>R$ {item.price.toFixed(2)}</p>
+                                        </div>
+                                        <div className="quantity-controls">
+                                            <ion-icon name="add-outline" onClick={() => updateCartItem(item.id, item.quantity + 1)}></ion-icon>
+                                            <span>{item.quantity}</span>
+                                            <ion-icon name="remove-outline" onClick={() => updateCartItem(item.id, item.quantity - 1)}></ion-icon>
+                                        </div>
                                     </div>
-                                    <button onClick={() => handleRemoveItem(item.orderItemId)}>Remove</button>
+                                    <div className='cart-remove'>
+                                        <ion-icon name="trash-outline" onClick={() => removeCartItem(item.id)}></ion-icon>
+                                    </div>
                                 </li>
                             ))}
                         </ul>
-                        <div className="modal-footer">
-                            <button onClick={onClose}>Close</button>
-                            <button onClick={handleCheckout}>Checkout</button>
+                        <div className="cart-summary">
+                            <h3>Total: R$ {calculateTotal()}</h3>
                         </div>
-                    </div>
+                        <div className="cart-actions">
+                            <button onClick={onClose}>Continue Shopping</button>
+                            <button onClick={handleSaveCart}>To Buy</button>
+                        </div>
+                    </>
                 ) : (
-                    <p>Your cart is empty!</p>
+                    <>
+                        <div className='cart-empty'>
+                            <p>Your cart is empty!</p>
+                            <ion-icon name="close-outline" onClick={onClose}></ion-icon>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
