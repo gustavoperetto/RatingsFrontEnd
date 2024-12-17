@@ -175,6 +175,7 @@ function Home() {
             onAddProduct={handleOpenProductClick}
             onAddCategory={handleOpenCategoryClick}
             onAddSale={handleOpenSaleClick}
+            onLogin={handleOpenLoginClick}
             className={isAnimatingOut ? "animating-out" : ""}
           />)}
         </div >

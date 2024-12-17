@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './ModalLogin.css';
-import axios from 'axios';
 
 function ModalLogin({ show, onClose, onNotify }) {
 
@@ -9,7 +8,7 @@ function ModalLogin({ show, onClose, onNotify }) {
     }
 
     return (
-        <div className="modal-overlay-sale">
+        <div className="modal-overlay-login">
             <div className="modal">
                 <h2>Login</h2>
                 <form>
@@ -24,6 +23,10 @@ function ModalLogin({ show, onClose, onNotify }) {
                     <div className="modal-buttons">
                         <button type="button" onClick={onClose}>Cancel</button>
                         <button type="submit">Sign In</button>
+                        <div className='modal-register-forgot'>
+                            <a>Forgot Password?</a>
+                            <a>Register</a>
+                        </div>
                     </div>
                 </form>
             </div>
