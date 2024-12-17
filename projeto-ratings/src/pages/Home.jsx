@@ -7,6 +7,7 @@ import ModalCategory from '../Components/ModalCategory';
 import ModalSale from '../Components/ModalSale';
 import ModalEditProduct from '../Components/ModalEditProduct';
 import ModalShopCart from '../Components/ModalShopCart';
+import ModalLogin from '../Components/ModalLogin';
 import Notification from '../Components/Notification';
 import './Home.css';
 import ProductsList from '../Components/ProductsList';
@@ -27,8 +28,9 @@ function Home() {
   const [showModalSale, setShowModalSale] = useState(false);
   const [showModalEditProduct, setShowModalEditProduct] = useState(false);
   const [showModalShopCart, setShowModalShopCart] = useState(false);
+  const [showModalLogin, setShowModalLogin] = useState(false);
   const [productToEdit, setProductToEdit] = useState(null);
-  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [notifications, setNotifications] = useState([]);
   const [query, setQuery] = useState('');
   const [cartItems, setCartItems] = useState([]);
 
@@ -91,8 +93,16 @@ function Home() {
   };
 
   const showNotification = (message, type = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => handleCloseNotification(), 3000);
+    const newNotification = {
+      id: new Date().getTime(),
+      message, type
+    };
+    setNotifications((prevNotifications) =>
+      [...prevNotifications, newNotification]);
+    setTimeout(() => {
+      setNotifications((prevNotifications) =>
+        prevNotifications.filter((n) => n.id !== newNotification.id));
+    }, 3000);
   };
 
   const handleCloseNotification = () => {
@@ -121,6 +131,10 @@ function Home() {
     setShowModalShopCart(true);
   };
 
+  const handleOpenLoginClick = () => {
+    setShowModalLogin(true);
+  };
+
   //Close Modals
   const handleCloseModalProduct = () => {
     setShowModalProduct(false);
@@ -140,6 +154,10 @@ function Home() {
 
   const handleCloseModalEditProduct = () => {
     setShowModalEditProduct(false);
+  };
+
+  const handleCloseModalLogin = () => {
+    setShowModalLogin(false);
   };
 
   return (
@@ -192,12 +210,18 @@ function Home() {
         <div className='home-footer'>
           <Footer />
         </div>
-        <Notification message={notification.message} type={notification.type} onClose={handleCloseNotification} />
-        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification} />
+        <div className="notification-wrapper">
+          {notifications.map((notification) => (
+            <Notification key={notification.id} message={notification.message} type={notification.type} onClose={() =>
+              setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== notification.id))} 
+              />))}
+        </div>
+        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification} products={products} setProducts={updateProducts}/>
         <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification} />
         <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification} />
         <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification} />
         <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} />
+        <ModalLogin show={showModalLogin} onClose={handleCloseModalLogin} onNotify={showNotification} />
       </div>
     </>
   );

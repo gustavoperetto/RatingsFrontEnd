@@ -1,9 +1,16 @@
-.notification-container {
+.notification-wrapper {
   position: fixed;
   top: 20px;
   right: 10px;
   z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adiciona espaço entre as notificações */
+}
+
+.notification-container {
   animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in 2.5s;
+  opacity: 1; /* Certifique-se de que a notificação está visível inicialmente */
 }
 
 .notification-container.hide {

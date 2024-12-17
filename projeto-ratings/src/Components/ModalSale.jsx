@@ -53,7 +53,12 @@ function ModalSale({ show, onClose, onNotify }) {
                     'Content-Type': 'application/json',
                 }
             });
-
+            const response = await axios.get('http://localhost:8080/products');
+            const allProducts = response.data;
+            const productsUpdatedEvent = new CustomEvent('productsUpdated', {
+                detail: { updatedProducts: allProducts }
+            });
+            window.dispatchEvent(productsUpdatedEvent);
             onNotify('New price updated successfully', 'success');
             onClose();
         } catch (error) {
@@ -62,6 +67,8 @@ function ModalSale({ show, onClose, onNotify }) {
             onClose();
         }
     };
+
+
 
     if (!show) {
         return null;

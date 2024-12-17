@@ -10,21 +10,12 @@ function Notification({ message, type, onClose }) {
 
       const hideTimer = setTimeout(() => {
         setVisible(false);
-      }, 3000);
-    }
-  }, [message]);
-
-  useEffect(() => {
-    if (!visible && message) {
-      const cleanupTimer = setTimeout(() => {
         onClose();
-      }, 500);
+      }, 3000);
 
-      return () => {
-        clearTimeout(cleanupTimer);
-      };
+      return () => clearTimeout(hideTimer);
     }
-  }, [visible, message, onClose]);
+  }, [message, onClose]);
 
   if (!visible) return null;
 

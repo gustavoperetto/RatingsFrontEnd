@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './ModalProduct.css';
 import axios from 'axios';
 
-function ModalProduct({ show, onClose, onNotify }) {
+function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
   const [productName, setProductName] = useState('');
   const [productDescription, setProductDescription] = useState('');
   const [productPrice, setProductPrice] = useState('');
@@ -50,19 +50,25 @@ function ModalProduct({ show, onClose, onNotify }) {
 
     try {
       const productResponse = await axios.post('http://localhost:8080/products', newProduct);
-      const productId = productResponse.data.id;
+      const addedProduct = productResponse.data;
 
-      if (productImage && productId) {
+      if (productImage && addedProduct.id) {
         const formData = new FormData();
         formData.append('file', productImage);
-        formData.append('productId', productId);
+        formData.append('productId', addedProduct.id);
         await axios.post('http://localhost:8080/products/product-images', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
+          headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
+      const updatedProducts = [...products, addedProduct];
+      setProducts(updatedProducts);
+      const productsUpdatedEvent = new CustomEvent('productsUpdated', {
+        detail: { updatedProducts },
+      });
+      window.dispatchEvent(productsUpdatedEvent);
+
       onNotify('Product added sucessfully', 'success');
       onClose();
-      location.reload();
     } catch (error) {
       onNotify('Error adding product.', 'error');
       console.error('Error:', error);

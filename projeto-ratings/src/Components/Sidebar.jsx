@@ -1,7 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, className }) {
+function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLogin, className }) {
     return (
         <div>
             <div className={`sidebar ${className}`}>
@@ -33,7 +33,7 @@ function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, clas
                                 <a onClick={onAddCategory} className="p-link">Category Manager</a>
                             </li>
                             <li className="p-menuitem">
-                                <a href="#" className="p-link">Account</a>
+                                <a onClick={onLogin} className="p-link">Account</a>
                             </li>
                         </ul>
                     </div>

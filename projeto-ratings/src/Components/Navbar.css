@@ -55,10 +55,21 @@
     color: #a686b1;
 }
 
+.shopcart-icon {
+    display: flex;
+    flex-flow: row wrap;
+    color: #a686b1;
+    font-size: 20px;
+}
+
 .shopcart-icon ion-icon {
     width: 42px;
     height: 42px;
     color: #a686b1;
+}
+
+.shopcart-icon span {
+    margin-top: 12px;
 }
 
 .navbar .sidebar-icon ion-icon:active {

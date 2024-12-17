@@ -3,7 +3,6 @@ import axios from 'axios';
 import './ProductsList.css';
 
 function ProductsList({ query, onEditProduct, products, setProducts, onNotify }) {
-
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
@@ -12,7 +11,6 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const shouldShowPagination = totalPages > 1 && !query;
-
 
   useEffect(() => {
     if (query) {
@@ -24,6 +22,21 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
       setFilteredProducts(products);
     }
   }, [query, products]);
+
+  useEffect(() => {
+    const handleProductsUpdate = (event) => {
+      const updatedProducts = event.detail.updatedProducts || [];
+      setProducts(updatedProducts);
+      setFilteredProducts(updatedProducts);
+    };
+
+    window.addEventListener('productsUpdated', handleProductsUpdate);
+
+    return () => {
+      window.removeEventListener('productsUpdated', handleProductsUpdate);
+    };
+  }, [setProducts]);
+
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -42,9 +55,9 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
     const existingItem = currentCart.find(item => item.id === product.id);
 
     if (existingItem) {
-        existingItem.quantity += 1;
+      existingItem.quantity += 1;
     } else {
-        currentCart.push({ ...product, quantity: 1 });
+      currentCart.push({ ...product, quantity: 1 });
     }
 
     localStorage.setItem('cart', JSON.stringify(currentCart));
@@ -53,26 +66,29 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
     window.dispatchEvent(cartUpdatedEvent);
 
     onNotify('Item added to cart!', 'success');
-};
-
-
-
+  };
 
   const handleDelete = async (productId) => {
     if (isNaN(productId)) {
       console.error('Invalid product ID');
       return;
-    } try {
+    }
+    try {
       await axios.delete(`http://localhost:8080/products/${productId}`);
       const updatedProducts = products.filter(product => product.id !== productId);
       setProducts(updatedProducts);
       setFilteredProducts(updatedProducts);
+
+      const productsUpdatedEvent = new CustomEvent('productsUpdated', {
+        detail: { updatedProducts }
+      });
+      window.dispatchEvent(productsUpdatedEvent);
       onNotify('Successfully deleted', 'success');
     } catch (error) {
       onNotify('Error deleting product.', 'error');
       console.error('Error:', error);
     }
-  }
+  };
 
   return (
     <>
@@ -111,6 +127,6 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
         </>}
     </>
   );
-};
+}
 
 export default ProductsList;

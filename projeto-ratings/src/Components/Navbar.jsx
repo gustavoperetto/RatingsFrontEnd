@@ -25,8 +25,8 @@ function Navbar({ onToggleVisible, onShopCart, className, cartItemCount }) {
       </div>
       <h1>Ratings</h1>
       <div className="shopcart-icon">
-        <ion-icon name="cart-outline" onClick={onShopCart}></ion-icon>
         <span>{cartCount}</span>
+        <ion-icon name="cart-outline" onClick={onShopCart}></ion-icon>
       </div>
     </div>
   );

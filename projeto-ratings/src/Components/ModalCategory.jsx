@@ -44,26 +44,30 @@ function ModalProduct({ show, onClose, onNotify }) {
 
             try {
                 await axios.post('http://localhost:8080/categories', newCategory);
-                onNotify('Category added successfully!');
+                onNotify('Category added successfully!', 'success');
                 onClose();
             } catch (error) {
-                onNotify('Error adding category.');
+                onNotify('Error adding category.', 'error');
                 console.error('Error:', error);
                 onClose();
             }
         } else if (operation === 'delete') {
             try {
                 await axios.delete(`http://localhost:8080/categories/${selectedCategory}`);
-                onNotify('Category deleted successfully!');
+                onNotify('Category deleted successfully!', 'success');
+                const productsUpdatedEvent = new CustomEvent('productsUpdated', {
+                    detail: { updatedProducts: [] }
+                });
+                window.dispatchEvent(productsUpdatedEvent);
                 onClose();
-                location.reload();
             } catch (error) {
-                onNotify('Error adding category.');
+                onNotify('Error deleting category.', 'error');
                 console.error('Error:', error);
                 onClose();
             }
         }
     };
+
 
     if (!show) {
         return null;

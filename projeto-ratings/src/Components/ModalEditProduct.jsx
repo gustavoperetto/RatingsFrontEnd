@@ -49,15 +49,21 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
 
     try {
       await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct);
+      const response = await axios.get('http://localhost:8080/products');
+      const allProducts = response.data;
+      const productsUpdatedEvent = new CustomEvent('productsUpdated', {
+        detail: { updatedProducts: allProducts }
+      });
+      window.dispatchEvent(productsUpdatedEvent);
       onNotify('Product updated successfully', 'success');
       onClose();
-      location.reload();
     } catch (error) {
       onNotify('Error updating the product.', 'error');
       console.error('Error:', error);
       onClose();
     }
   };
+
 
   if (!show) {
     return null;
