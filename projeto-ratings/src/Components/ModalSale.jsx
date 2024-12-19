@@ -47,10 +47,18 @@ function ModalSale({ show, onClose, onNotify }) {
             return;
         }
 
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            onNotify('No permission to do this operation, contact your administrator!', 'error');
+            return;
+        }
+
         try {
             await axios.put(`http://localhost:8080/products/sale/${selectedProduct.id}`, { price: newPrice }, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             });
             const response = await axios.get('http://localhost:8080/products');

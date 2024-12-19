@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ProductsList.css';
 
-function ProductsList({ query, onEditProduct, products, setProducts, onNotify }) {
+function ProductsList({ query, onEditProduct, products, setProducts, onNotify, userRole }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
@@ -69,12 +69,24 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
   };
 
   const handleDelete = async (productId) => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      onNotify('No permission to do this operation, contact your administrator!', 'error');
+      return;
+    }
+
     if (isNaN(productId)) {
       console.error('Invalid product ID');
       return;
     }
+
     try {
-      await axios.delete(`http://localhost:8080/products/${productId}`);
+      await axios.delete(`http://localhost:8080/products/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const updatedProducts = products.filter(product => product.id !== productId);
       setProducts(updatedProducts);
       setFilteredProducts(updatedProducts);
@@ -102,14 +114,22 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify })
             {paginatedProducts.map(product => (
               <div className='products-grid-item' key={product.id}>
                 <div className='products-grid-item-hover'>
-                  <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
-                  <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                  {userRole === 'ADMIN' && (
+                    <>
+                      <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                      <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                    </>
+                  )}
                   <ion-icon name="cart-outline" onClick={() => handleAddToCart(product)}></ion-icon>
                 </div>
                 <div className='products-grid-image'>
                   <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
-                  <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
-                  <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                  {userRole === 'ADMIN' && (
+                    <>
+                      <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                      <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
+                    </>
+                  )}
                   <ion-icon name="cart-outline" onClick={() => handleAddToCart(product)}></ion-icon>
                 </div>
                 <h4>{product.name}</h4>

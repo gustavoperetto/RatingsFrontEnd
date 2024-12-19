@@ -33,6 +33,8 @@ function Home() {
   const [notifications, setNotifications] = useState([]);
   const [query, setQuery] = useState('');
   const [cartItems, setCartItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(function () {
     axios.get('http://localhost:8080/products')
@@ -41,6 +43,36 @@ function Home() {
       })
       .catch(err => console.log(err));
   }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      axios.get('http://localhost:8080/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => {
+          setIsLoggedIn(true);
+          setUserRole(res.data.role);
+        })
+        .catch(() => {
+          setIsLoggedIn(false);
+          setUserRole(null);
+          console.log('User not authenticated');
+        });
+    }
+  }, []);
+
+  const handleLoginSuccess = (role) => {
+    setIsLoggedIn(true);
+    setUserRole(role);
+    setShowModalLogin(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    setIsLoggedIn(false);
+    setUserRole(null);
+  };
 
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -176,7 +208,10 @@ function Home() {
             onAddCategory={handleOpenCategoryClick}
             onAddSale={handleOpenSaleClick}
             onLogin={handleOpenLoginClick}
+            onLogout={handleLogout}
             className={isAnimatingOut ? "animating-out" : ""}
+            isLoggedIn={isLoggedIn}
+            userRole={userRole}
           />)}
         </div >
         <div className='home-carousel'>
@@ -206,7 +241,7 @@ function Home() {
           </form>
         </div>
         <div className='products-grid-root'>
-          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification} />
+          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification} userRole={userRole}/>
         </div>
         <div className='home-footer'>
           <Footer />
@@ -214,15 +249,15 @@ function Home() {
         <div className="notification-wrapper">
           {notifications.map((notification) => (
             <Notification key={notification.id} message={notification.message} type={notification.type} onClose={() =>
-              setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== notification.id))} 
-              />))}
+              setNotifications((prevNotifications) => prevNotifications.filter((n) => n.id !== notification.id))}
+            />))}
         </div>
-        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification} products={products} setProducts={updateProducts}/>
+        <ModalProduct show={showModalProduct} onClose={handleCloseModalProduct} onNotify={showNotification} products={products} setProducts={updateProducts} />
         <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification} />
         <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification} />
         <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification} />
         <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} />
-        <ModalLogin show={showModalLogin} onClose={handleCloseModalLogin} onNotify={showNotification} />
+        <ModalLogin show={showModalLogin} onClose={handleCloseModalLogin} onNotify={showNotification} onLoginSuccess={handleLoginSuccess} />
       </div>
     </>
   );

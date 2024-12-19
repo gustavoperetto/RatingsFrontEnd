@@ -48,8 +48,24 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
       categoryId: selectedCategory,
     };
 
+    const token = localStorage.getItem('authToken'); // Obtém o token armazenado no localStorage
+    
+    if (!token) {
+      onNotify('No permission to do this operation, contact your administrator!', 'error');
+      return;
+    }
+
     try {
-      const productResponse = await axios.post('http://localhost:8080/products', newProduct);
+      const productResponse = await axios.post(
+        'http://localhost:8080/products',
+        newProduct,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Inclui o token no cabeçalho da requisição
+          },
+        }
+      );
+
       const addedProduct = productResponse.data;
 
       if (productImage && addedProduct.id) {
@@ -57,9 +73,13 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
         formData.append('file', productImage);
         formData.append('productId', addedProduct.id);
         await axios.post('http://localhost:8080/products/product-images', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`, // Inclui o token também nesta requisição
+          },
         });
       }
+
       const updatedProducts = [...products, addedProduct];
       setProducts(updatedProducts);
       const productsUpdatedEvent = new CustomEvent('productsUpdated', {
@@ -67,7 +87,7 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
       });
       window.dispatchEvent(productsUpdatedEvent);
 
-      onNotify('Product added sucessfully', 'success');
+      onNotify('Product added successfully', 'success');
       onClose();
     } catch (error) {
       onNotify('Error adding product.', 'error');

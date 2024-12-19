@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
 
-function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLogin, className }) {
+function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLogin, onLogout, className, isLoggedIn, userRole }) {
+    const [LoggedAdmin, setLoggedAdmin] = useState(false);
+
+    useEffect(() => {
+        const isAdmin = isLoggedIn && userRole === "ADMIN";
+        setLoggedAdmin(isAdmin);
+    }, [isLoggedIn, userRole]);
+
     return (
         <div>
             <div className={`sidebar ${className}`}>
@@ -23,17 +30,23 @@ function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLo
                             <li className="p-menuitem">
                                 <a href="#" className="p-link">Categories</a>
                             </li>
+                            {LoggedAdmin && (
+                                <>
+                                    <li className="p-menuitem">
+                                        <a onClick={onAddSale} className="p-link">Sale Manager</a>
+                                    </li>
+                                    <li className="p-menuitem">
+                                        <a onClick={onAddProduct} className="p-link">Add Product</a>
+                                    </li>
+                                    <li className="p-menuitem">
+                                        <a onClick={onAddCategory} className="p-link">Category Manager</a>
+                                    </li>
+                                </>
+                            )}
                             <li className="p-menuitem">
-                                <a onClick={onAddSale} className="p-link">Sale Manager</a>
-                            </li>
-                            <li className="p-menuitem">
-                                <a onClick={onAddProduct} className="p-link">Add Product</a>
-                            </li>
-                            <li className="p-menuitem">
-                                <a onClick={onAddCategory} className="p-link">Category Manager</a>
-                            </li>
-                            <li className="p-menuitem">
-                                <a onClick={onLogin} className="p-link">Account</a>
+                                <a onClick={isLoggedIn ? onLogout : onLogin} className="p-link">
+                                    {isLoggedIn ? "Sign Out" : "Sign In"}
+                                </a>
                             </li>
                         </ul>
                     </div>

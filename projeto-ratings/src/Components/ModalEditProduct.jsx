@@ -47,8 +47,19 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
       categoryId: selectedCategory,
     };
 
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+      onNotify('No permission to do this operation, contact your administrator!', 'error');
+      return;
+    }
+
     try {
-      await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct);
+      await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const response = await axios.get('http://localhost:8080/products');
       const allProducts = response.data;
       const productsUpdatedEvent = new CustomEvent('productsUpdated', {
