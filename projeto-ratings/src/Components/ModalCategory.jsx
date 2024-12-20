@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ModalCategory.css';
 import axios from 'axios';
+import Confirmation from './Confirmation';
 
 function ModalProduct({ show, onClose, onNotify }) {
     const [categoryName, setCategoryName] = useState('');
@@ -8,6 +9,7 @@ function ModalProduct({ show, onClose, onNotify }) {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
     const [operation, setOperation] = useState('');
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     useEffect(() => {
         if (show) {
@@ -24,17 +26,29 @@ function ModalProduct({ show, onClose, onNotify }) {
         }
     }, [show]);
 
+    const resetFields = () => {
+        setCategoryName('');
+        setCategoryDescription('');
+        setSelectedCategory('');
+        setOperation('');
+        setShowConfirmation(false);
+    };
+
     const handleCategoryChange = (event) => {
-        const selectedValue = event.target.value;
-        setSelectedCategory(selectedValue);
+        setSelectedCategory(event.target.value);
     };
 
     const handleOperationChange = (event) => {
         setOperation(event.target.value);
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleConfirm = async () => {
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            onNotify('No permission to do this operation, contact your administrator!', 'error');
+            return;
+        }
 
         if (operation === 'add') {
             const newCategory = {
@@ -43,31 +57,39 @@ function ModalProduct({ show, onClose, onNotify }) {
             };
 
             try {
-                await axios.post('http://localhost:8080/categories', newCategory);
+                await axios.post('http://localhost:8080/categories', newCategory, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 onNotify('Category added successfully!', 'success');
-                onClose();
             } catch (error) {
                 onNotify('Error adding category.', 'error');
                 console.error('Error:', error);
-                onClose();
             }
         } else if (operation === 'delete') {
             try {
-                await axios.delete(`http://localhost:8080/categories/${selectedCategory}`);
-                onNotify('Category deleted successfully!', 'success');
-                const productsUpdatedEvent = new CustomEvent('productsUpdated', {
-                    detail: { updatedProducts: [] }
+                await axios.delete(`http://localhost:8080/categories/${selectedCategory}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
                 });
-                window.dispatchEvent(productsUpdatedEvent);
-                onClose();
+                onNotify('Category deleted successfully!', 'success');
             } catch (error) {
                 onNotify('Error deleting category.', 'error');
                 console.error('Error:', error);
-                onClose();
             }
         }
+        resetFields();
+        onClose();
     };
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setShowConfirmation(true);
+    };
 
     if (!show) {
         return null;
@@ -131,6 +153,17 @@ function ModalProduct({ show, onClose, onNotify }) {
                     </div>
                 </form>
             </div>
+            {showConfirmation && (
+                <Confirmation
+                    message={
+                        operation === 'add'
+                            ? `Do you want to add the category "${categoryName}"?`
+                            : `Do you want to delete the selected category?`
+                    }
+                    onConfirm={handleConfirm}
+                    onClose={() => setShowConfirmation(false)}
+                />
+            )}
         </div>
     );
 }

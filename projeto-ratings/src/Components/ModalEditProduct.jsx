@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ModalEditProduct.css';
 import axios from 'axios';
-import 'swiper/css';
-import 'swiper/css/pagination';
+import Confirmation from './Confirmation';
 
 function ModalEditProduct({ show, onClose, product, onNotify }) {
   const [productName, setProductName] = useState('');
@@ -11,6 +10,7 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
   const [productStock, setProductStock] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
     if (product) {
@@ -31,13 +31,7 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
     }
   }, [show]);
 
-  const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
+  const handleSubmit = async () => {
     const updatedProduct = {
       id: product.id,
       name: productName,
@@ -48,7 +42,6 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
     };
 
     const token = localStorage.getItem('authToken');
-
     if (!token) {
       onNotify('No permission to do this operation, contact your administrator!', 'error');
       return;
@@ -56,14 +49,12 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
 
     try {
       await axios.put(`http://localhost:8080/products/${product.id}`, updatedProduct, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       const response = await axios.get('http://localhost:8080/products');
       const allProducts = response.data;
       const productsUpdatedEvent = new CustomEvent('productsUpdated', {
-        detail: { updatedProducts: allProducts }
+        detail: { updatedProducts: allProducts },
       });
       window.dispatchEvent(productsUpdatedEvent);
       onNotify('Product updated successfully', 'success');
@@ -71,20 +62,21 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
     } catch (error) {
       onNotify('Error updating the product.', 'error');
       console.error('Error:', error);
-      onClose();
     }
   };
 
+  const handleConfirm = () => {
+    setShowConfirmation(false);
+    handleSubmit();
+  };
 
-  if (!show) {
-    return null;
-  }
+  if (!show) return null;
 
   return (
     <div className="modal-overlay-EditProduct">
       <div className="modal">
         <h2>Edit Product</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={(e) => e.preventDefault()}>
           <label>
             Name:
             <input
@@ -125,7 +117,7 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
             Category:
             <select
               value={selectedCategory}
-              onChange={handleCategoryChange}
+              onChange={(e) => setSelectedCategory(e.target.value)}
               required
             >
               <option value="" disabled>
@@ -142,10 +134,15 @@ function ModalEditProduct({ show, onClose, product, onNotify }) {
             <button type="button" onClick={onClose}>
               Cancel
             </button>
-            <button type="submit">Save</button>
+            <button type="button" onClick={() => setShowConfirmation(true)}>
+              Save
+            </button>
           </div>
         </form>
       </div>
+      {showConfirmation && (
+        <Confirmation message="Do you really want to update this product?" onConfirm={handleConfirm} onClose={() => setShowConfirmation(false)} />
+      )}
     </div>
   );
 }

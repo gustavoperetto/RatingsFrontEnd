@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import "./Navbar.css";
 
-function Navbar({ onToggleVisible, onShopCart, className, cartItemCount }) {
+function Navbar({ onToggleVisible, onShopCart, className }) {
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {

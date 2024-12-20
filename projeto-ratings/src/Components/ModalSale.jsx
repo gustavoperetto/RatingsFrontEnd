@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import './ModalSale.css';
 import axios from 'axios';
+import Confirmation from './Confirmation';
 
 function ModalSale({ show, onClose, onNotify }) {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [productNewPrice, setProductNewPrice] = useState('');
+    const [showConfirmation, setShowConfirmation] = useState(false);
+    const [productToEdit, setProductToEdit] = useState(null);
 
+    // Get the products list
     useEffect(() => {
         if (show) {
             axios.get('http://localhost:8080/products')
@@ -20,6 +24,17 @@ function ModalSale({ show, onClose, onNotify }) {
         }
     }, [show]);
 
+    // State reset
+    useEffect(() => {
+        if (!show) {
+            setSelectedProduct(null);
+            setProductNewPrice('');
+            setShowConfirmation(false);
+            setProductToEdit(null);
+        }
+    }, [show]);
+
+    // Product Change on select
     const handleProductChange = (event) => {
         const productId = event.target.value;
         const product = products.find(p => p.id.toString() === productId);
@@ -27,33 +42,41 @@ function ModalSale({ show, onClose, onNotify }) {
         setProductNewPrice('');
     };
 
+    // Validation
     const handleNewPriceChange = (event) => {
-        setProductNewPrice(event.target.value);
+        const value = parseFloat(event.target.value);
+        if (value > 0 && value < selectedProduct?.price) {
+            setProductNewPrice(event.target.value);
+        } else if (event.target.value === '') {
+            setProductNewPrice('');
+        }
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-
+        if (event) {
+            event.preventDefault();
+        }
+    
         if (!selectedProduct || !productNewPrice) {
             onNotify('Please select a product and enter a new price.', 'error');
             onClose();
             return;
         }
-
+    
         const newPrice = parseFloat(productNewPrice);
         if (newPrice >= selectedProduct.price) {
             onNotify('The new price must be lower than the original price.', 'error');
             onClose();
             return;
         }
-
+    
         const token = localStorage.getItem('authToken');
-
+    
         if (!token) {
             onNotify('No permission to do this operation, contact your administrator!', 'error');
             return;
         }
-
+    
         try {
             await axios.put(`http://localhost:8080/products/sale/${selectedProduct.id}`, { price: newPrice }, {
                 headers: {
@@ -75,8 +98,13 @@ function ModalSale({ show, onClose, onNotify }) {
             onClose();
         }
     };
-
-
+    
+    const handleConfirm = () => {
+        if (productToEdit) {
+            handleSubmit();
+        }
+        setShowConfirmation(false);
+    };
 
     if (!show) {
         return null;
@@ -89,18 +117,22 @@ function ModalSale({ show, onClose, onNotify }) {
                 <form onSubmit={handleSubmit}>
                     <label>
                         Products:
-                        <select
-                            value={selectedProduct?.id || ''}
-                            onChange={handleProductChange}
-                            required
-                        >
-                            <option value="" disabled>Select a product</option>
-                            {products.map(product => (
-                                <option key={product.id} value={product.id}>
-                                    {product.name}
-                                </option>
-                            ))}
-                        </select>
+                        {products.length > 0 ? (
+                            <select
+                                value={selectedProduct?.id || ''}
+                                onChange={handleProductChange}
+                                required
+                            >
+                                <option value="" disabled>Select a product</option>
+                                {products.map(product => (
+                                    <option key={product.id} value={product.id}>
+                                        {product.name}
+                                    </option>
+                                ))}
+                            </select>
+                        ) : (
+                            <p>Loading products...</p>
+                        )}
                     </label>
                     {selectedProduct && (
                         <label>
@@ -126,13 +158,27 @@ function ModalSale({ show, onClose, onNotify }) {
                             required
                         />
                     </label>
-
                     <div className="modal-buttons">
                         <button type="button" onClick={onClose}>Cancel</button>
-                        <button type="submit">Update</button>
+                        <button type="button" onClick={() => {
+                            setProductToEdit(selectedProduct)
+                            setShowConfirmation(true)
+                        }}
+                            disabled={!selectedProduct || !productNewPrice}
+                        >
+                            Update
+                        </button>
                     </div>
                 </form>
             </div>
+            {showConfirmation && (
+                <Confirmation message={`Do you really want to apply a discount of R$ ${(selectedProduct.price - parseFloat(productNewPrice)).toFixed(2)}?`}
+                    onConfirm={handleConfirm}
+                    onClose={() => {
+                        setShowConfirmation(false)
+                        setProductToEdit(null)
+                    }} />
+            )}
         </div>
     );
 }

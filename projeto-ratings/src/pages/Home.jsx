@@ -36,6 +36,7 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
 
+  //Product request
   useEffect(function () {
     axios.get('http://localhost:8080/products')
       .then(res => {
@@ -44,6 +45,7 @@ function Home() {
       .catch(err => console.log(err));
   }, []);
 
+  //Token validation
   useEffect(() => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -62,28 +64,33 @@ function Home() {
     }
   }, []);
 
+  // Login successful
   const handleLoginSuccess = (role) => {
     setIsLoggedIn(true);
     setUserRole(role);
     setShowModalLogin(false);
   };
 
+  // Logout
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setIsLoggedIn(false);
     setUserRole(null);
   };
 
+  // Shop cart update realtime
   useEffect(() => {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     setCartItems(cart);
   }, []);
 
+  // Add to localStorage
   const updateCartItems = (newCartItems) => {
     setCartItems(newCartItems);
     localStorage.setItem('cart', JSON.stringify(newCartItems));
   };
 
+  // Const to check if any modal is open
   const isAnyModalOpen =
     showModalProduct ||
     showModalCategory ||
@@ -91,6 +98,8 @@ function Home() {
     showModalEditProduct ||
     showModalShopCart;
 
+
+  // Check if any modal is open, then disable scroll on background  
   useEffect(() => {
     if (isAnyModalOpen) {
       document.body.style.overflow = 'hidden';
@@ -102,6 +111,7 @@ function Home() {
     };
   }, [isAnyModalOpen]);
 
+  // Controls the animation of the bars
   const handleToggle = (target) => {
     if (target === "sidebar" && isNavbarVisible) {
       setAnimatingOut(true);
@@ -120,10 +130,12 @@ function Home() {
     }
   };
 
+  // Update the product list
   const updateProducts = (updatedProductList) => {
     setProducts(updatedProductList);
   };
 
+  // handle to show notifications
   const showNotification = (message, type = 'success') => {
     const newNotification = {
       id: new Date().getTime(),
@@ -137,6 +149,7 @@ function Home() {
     }, 3000);
   };
 
+  // handle to close notification reseting the state
   const handleCloseNotification = () => {
     setNotification({ message: '', type: '' });
   };

@@ -57,7 +57,7 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
                 email: formData.username,
                 password: formData.password,
             };
-
+    
         try {
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -66,27 +66,40 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
                 },
                 body: JSON.stringify(payload),
             });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data && data.token) {
-                    const decodedToken = jwtDecode(data.token);
-                    const role = decodedToken.role;
-                    localStorage.setItem('authToken', data.token);
-                    onNotify('Login successful');
-                    onLoginSuccess(role);
-                    handleClose();
-                } else {
-                    onNotify('Registration successful');
-                    handleClose();
-                }
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                onNotify(errorMessage || 'An error occurred');
+                return;
+            }
+    
+            const contentType = response.headers.get('Content-Type') || '';
+            const isJson = contentType.includes('application/json');
+    
+            const data = isJson ? await response.json() : null;
+    
+            if (isRegistering) {
+                onNotify('Registration successful');
+                resetForm();
+                return;
+            }
+    
+            if (data?.token) {
+                const decodedToken = jwtDecode(data.token);
+                const role = decodedToken.role;
+                localStorage.setItem('authToken', data.token);
+                onNotify('Login successful');
+                onLoginSuccess(role);
+                handleClose();
+            } else {
+                throw new Error('Invalid login response: no token provided.');
             }
         } catch (error) {
             console.error('Error:', error);
             onNotify('An unexpected error occurred.');
-            handleClose();
         }
     };
+    
 
     return (
         <div className="modal-overlay-login">
@@ -132,6 +145,8 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleChange}
+                                    maxLength={11}
+                                    minLength={11}
                                     required
                                 />
                             </label>
@@ -178,8 +193,7 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
                         <button type="submit">
                             {isRegistering ? 'Sign Up' : 'Sign In'}
                         </button>
-                        <div className="modal-register-forgot">
-                            {!isRegistering && <a href="#">Forgot Password?</a>}
+                        <div className="modal-register">
                             <a
                                 href="#"
                                 onClick={() => setIsRegistering((prev) => !prev)}

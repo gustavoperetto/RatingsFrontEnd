@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ProductsList.css';
+import Confirmation from './Confirmation';
 
 function ProductsList({ query, onEditProduct, products, setProducts, onNotify, userRole }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -11,6 +12,8 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
   const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
   const shouldShowPagination = totalPages > 1 && !query;
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   useEffect(() => {
     if (query) {
@@ -102,6 +105,13 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
     }
   };
 
+  const handleConfirm = () => {
+    if (productToDelete) {
+      handleDelete(productToDelete.id);
+    }
+    setShowConfirmation(false);
+  };
+
   return (
     <>
       {filteredProducts.length === 0 &&
@@ -116,7 +126,11 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
                 <div className='products-grid-item-hover'>
                   {userRole === 'ADMIN' && (
                     <>
-                      <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                      <ion-icon name="trash-outline"
+                        onClick={() => {
+                          setProductToDelete(product)
+                          setShowConfirmation(true)
+                        }}></ion-icon>
                       <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
                     </>
                   )}
@@ -126,7 +140,11 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
                   <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
                   {userRole === 'ADMIN' && (
                     <>
-                      <ion-icon name="trash-outline" onClick={() => handleDelete(product.id)}></ion-icon>
+                      <ion-icon name="trash-outline"
+                        onClick={() => {
+                          setProductToDelete(product)
+                          setShowConfirmation(true)
+                        }}></ion-icon>
                       <ion-icon name="pencil-outline" onClick={() => onEditProduct(product)}></ion-icon>
                     </>
                   )}
@@ -145,6 +163,13 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
             </div>
           )}
         </>}
+      {showConfirmation && (
+        <Confirmation message="Do you really want to delete this product?" onConfirm={handleConfirm}
+          onClose={() => {
+            setShowConfirmation(false)
+            setProductToDelete(null)
+          }} />
+      )}
     </>
   );
 }
