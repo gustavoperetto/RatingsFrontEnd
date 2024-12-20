@@ -48,7 +48,7 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
       categoryId: selectedCategory,
     };
 
-    const token = localStorage.getItem('authToken'); // Obtém o token armazenado no localStorage
+    const token = localStorage.getItem('authToken');
     
     if (!token) {
       onNotify('No permission to do this operation, contact your administrator!', 'error');
@@ -61,7 +61,7 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
         newProduct,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Inclui o token no cabeçalho da requisição
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -75,7 +75,7 @@ function ModalProduct({ show, onClose, onNotify, products, setProducts }) {
         await axios.post('http://localhost:8080/products/product-images', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`, // Inclui o token também nesta requisição
+            Authorization: `Bearer ${token}`,
           },
         });
       }

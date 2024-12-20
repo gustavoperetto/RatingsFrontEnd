@@ -41,6 +41,8 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // JSON create to send to API
         const endpoint = isRegistering
             ? 'http://localhost:8080/auth/register'
             : 'http://localhost:8080/auth/login';
@@ -87,9 +89,10 @@ function ModalLogin({ show, onClose, onNotify, onLoginSuccess }) {
             if (data?.token) {
                 const decodedToken = jwtDecode(data.token);
                 const role = decodedToken.role;
+                const id = decodedToken.id;
                 localStorage.setItem('authToken', data.token);
                 onNotify('Login successful');
-                onLoginSuccess(role);
+                onLoginSuccess(role, id);
                 handleClose();
             } else {
                 throw new Error('Invalid login response: no token provided.');

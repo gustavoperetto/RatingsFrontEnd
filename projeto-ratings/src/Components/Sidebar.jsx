@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import './Sidebar.css';
+import axios from 'axios';
 
-function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLogin, onLogout, className, isLoggedIn, userRole }) {
+function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLogin, onLogout, className, isLoggedIn, userRole, userId }) {
     const [LoggedAdmin, setLoggedAdmin] = useState(false);
+    const [user, setUser] = useState([]);
 
     useEffect(() => {
         const isAdmin = isLoggedIn && userRole === "ADMIN";
         setLoggedAdmin(isAdmin);
     }, [isLoggedIn, userRole]);
+
+    useEffect(() => {
+        if (userId) {
+            axios.get(`http://localhost:8080/customers/${userId}`)
+                .then(res => {
+                    setUser(res.data);
+                })
+                .catch(err => console.error('Error loading user:', err));
+        }
+    },[userId]);
 
     return (
         <div>
@@ -15,10 +27,12 @@ function Sidebar({ onToggleVisible, onAddProduct, onAddCategory, onAddSale, onLo
                 <div className='navbar-icon'>
                     <ion-icon name="menu-outline" onClick={onToggleVisible}></ion-icon>
                 </div>
-                <img src="movies-podcast.png" alt="Ratings" className="ratings_logo" />
                 <div className="p-grid p-fluid">
                     <div className="p-col-12">
-                        <h1>Ratings</h1>
+                        <h1>hello,
+                            <br /> 
+                            {user ? user.name : ''}
+                        </h1>
                     </div>
                 </div>
                 <div className="p-grid p-fluid">

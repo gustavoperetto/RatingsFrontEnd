@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './ModalShopCart.css';
 
-function ModalShopCart({ show, onClose, onNotify }) {
+function ModalShopCart({ show, onClose, onNotify, isLoggedIn, showLogin }) {
     const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
@@ -31,9 +31,13 @@ function ModalShopCart({ show, onClose, onNotify }) {
     };
 
     const handleSaveCart = () => {
-        localStorage.setItem('cart', JSON.stringify(cartItems));
-        onNotify('Cart saved to LocalStorage!', 'success');
-        onClose();
+        if (isLoggedIn) {
+            localStorage.setItem('cart', JSON.stringify(cartItems));
+            onNotify('Cart saved to LocalStorage!', 'success');
+            onClose();
+        } else {
+            showLogin();
+        }
     };
 
     const handleCloseModal = () => {
@@ -41,7 +45,6 @@ function ModalShopCart({ show, onClose, onNotify }) {
         window.dispatchEvent(cartUpdatedEvent);
         onClose();
     };
-
 
     if (!show) return null;
 

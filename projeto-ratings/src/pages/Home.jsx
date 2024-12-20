@@ -35,6 +35,7 @@ function Home() {
   const [cartItems, setCartItems] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   //Product request
   useEffect(function () {
@@ -55,19 +56,23 @@ function Home() {
         .then(res => {
           setIsLoggedIn(true);
           setUserRole(res.data.role);
+          setUserId(res.data.id);
         })
         .catch(() => {
           setIsLoggedIn(false);
           setUserRole(null);
+          setUserId(null);
           console.log('User not authenticated');
         });
     }
   }, []);
 
   // Login successful
-  const handleLoginSuccess = (role) => {
+  const handleLoginSuccess = (role, id) => {
     setIsLoggedIn(true);
     setUserRole(role);
+    setUserId(id);
+    console.log(userId);
     setShowModalLogin(false);
   };
 
@@ -76,6 +81,7 @@ function Home() {
     localStorage.removeItem('authToken');
     setIsLoggedIn(false);
     setUserRole(null);
+    setUserId(null);
   };
 
   // Shop cart update realtime
@@ -225,6 +231,7 @@ function Home() {
             className={isAnimatingOut ? "animating-out" : ""}
             isLoggedIn={isLoggedIn}
             userRole={userRole}
+            userId={userId}
           />)}
         </div >
         <div className='home-carousel'>
@@ -269,7 +276,7 @@ function Home() {
         <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification} />
         <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification} />
         <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification} />
-        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} />
+        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} onLogin={isLoggedIn} showLogin={handleOpenLoginClick}/>
         <ModalLogin show={showModalLogin} onClose={handleCloseModalLogin} onNotify={showNotification} onLoginSuccess={handleLoginSuccess} />
       </div>
     </>
