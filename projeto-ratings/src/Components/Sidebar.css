@@ -25,11 +25,12 @@
    animation: sidebarOut 0.5s ease-out forwards;
  }
 
- .p-col-12 h1 {
+ .sidebar-hello h1 {
    text-transform: uppercase;
-   font-size: 10px !important;
+   font-size: 11px;
    padding: 8px;
    margin-top: 15px;
+   border-bottom: 0.5px groove #a686b1;
  }
 
  @keyframes sidebarIn {
@@ -54,12 +55,6 @@
      transform: translateX(-100%);
      opacity: 0;
    }
- }
-
- .sidebar .ratings_logo {
-   width: 60px;
-   height: 60px;
-   margin-top: 40px;
  }
 
  .sidebar .navbar-icon {
@@ -111,20 +106,17 @@
      width: 15vw;
    }
 
+   .sidebar .sidebar-hello h1 {
+     font-size: 15px;
+     padding: 10px;
+     margin-top: 20px;
+   }
+
    .sidebar .navbar-icon ion-icon {
      width: 70px;
      height: 70px;
      color: #a686b1;
      margin-top: 20px;
-   }
-
-   .sidebar h1 {
-     margin-top: 5px;
-     font-weight: 700;
-     position: relative;
-     transition: margin-right 0.5s;
-     font-size: 35px;
-     text-shadow: 1px 1px #a686b1;
    }
 
    .sidebar .p-menu {
@@ -135,11 +127,6 @@
      display: flex;
      justify-content: center;
      font-size: 18px;
-   }
-
-   .sidebar .ratings_logo {
-     width: 80px;
-     height: 80px;
    }
 
  }

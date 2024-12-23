@@ -17,6 +17,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 
 import axios from 'axios';
+import ModalAccount from '../Components/ModalAccount';
 
 function Home() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -29,6 +30,7 @@ function Home() {
   const [showModalEditProduct, setShowModalEditProduct] = useState(false);
   const [showModalShopCart, setShowModalShopCart] = useState(false);
   const [showModalLogin, setShowModalLogin] = useState(false);
+  const [showModalAccount, setShowModalAccount] = useState(null);
   const [productToEdit, setProductToEdit] = useState(null);
   const [notifications, setNotifications] = useState([]);
   const [query, setQuery] = useState('');
@@ -36,6 +38,7 @@ function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   //Product request
   useEffect(function () {
@@ -67,12 +70,16 @@ function Home() {
     }
   }, []);
 
+  // User Data
+  const handleUserDataUpdate = (updatedData) => {
+    setUserData((prevData) => ({ ...prevData, ...updatedData }));
+  };
+
   // Login successful
   const handleLoginSuccess = (role, id) => {
     setIsLoggedIn(true);
     setUserRole(role);
     setUserId(id);
-    console.log(userId);
     setShowModalLogin(false);
   };
 
@@ -102,7 +109,9 @@ function Home() {
     showModalCategory ||
     showModalSale ||
     showModalEditProduct ||
-    showModalShopCart;
+    showModalShopCart ||
+    showModalAccount ||
+    showModalLogin;
 
 
   // Check if any modal is open, then disable scroll on background  
@@ -186,6 +195,10 @@ function Home() {
     setShowModalLogin(true);
   };
 
+  const handleOpenAccountClick = () => {
+    setShowModalAccount(true);
+  };
+
   //Close Modals
   const handleCloseModalProduct = () => {
     setShowModalProduct(false);
@@ -211,6 +224,10 @@ function Home() {
     setShowModalLogin(false);
   };
 
+  const handleCloseModalAccount = () => {
+    setShowModalAccount(false);
+  };
+
   return (
     <>
       <div className="home">
@@ -226,12 +243,15 @@ function Home() {
             onAddProduct={handleOpenProductClick}
             onAddCategory={handleOpenCategoryClick}
             onAddSale={handleOpenSaleClick}
+            onEditAccount={handleOpenAccountClick}
             onLogin={handleOpenLoginClick}
             onLogout={handleLogout}
             className={isAnimatingOut ? "animating-out" : ""}
             isLoggedIn={isLoggedIn}
             userRole={userRole}
             userId={userId}
+            userData={userData}
+            setUserData={handleUserDataUpdate}
           />)}
         </div >
         <div className='home-carousel'>
@@ -261,7 +281,7 @@ function Home() {
           </form>
         </div>
         <div className='products-grid-root'>
-          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification} userRole={userRole}/>
+          <ProductsList query={query} onEditProduct={handleOpenEditProductClick} products={products} setProducts={updateProducts} onNotify={showNotification} userRole={userRole} />
         </div>
         <div className='home-footer'>
           <Footer />
@@ -276,8 +296,9 @@ function Home() {
         <ModalCategory show={showModalCategory} onClose={handleCloseModalCategory} onNotify={showNotification} />
         <ModalSale show={showModalSale} onClose={handleCloseModalSale} onNotify={showNotification} />
         <ModalEditProduct show={showModalEditProduct} onClose={handleCloseModalEditProduct} product={productToEdit} onNotify={showNotification} />
-        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} onLogin={isLoggedIn} showLogin={handleOpenLoginClick}/>
+        <ModalShopCart show={showModalShopCart} onClose={handleCloseModalShopCart} onNotify={showNotification} cartItems={cartItems} updateCartItems={updateCartItems} onLogin={isLoggedIn} showLogin={handleOpenLoginClick} />
         <ModalLogin show={showModalLogin} onClose={handleCloseModalLogin} onNotify={showNotification} onLoginSuccess={handleLoginSuccess} />
+        <ModalAccount show={showModalAccount} onClose={handleCloseModalAccount} onNotify={showNotification} userData={userData} setUserData={handleUserDataUpdate}/>
       </div>
     </>
   );
