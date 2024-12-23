@@ -4,6 +4,7 @@ import './ProductsList.css';
 import Confirmation from './Confirmation';
 
 function ProductsList({ query, onEditProduct, products, setProducts, onNotify, userRole }) {
+  const imageCache = {};
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
@@ -14,6 +15,20 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
   const shouldShowPagination = totalPages > 1 && !query;
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [imageUrls, setImageUrls] = useState({});
+
+  useEffect(() => {
+    const loadImage = async (id) => {
+      const url = await getCacheImageUrl(id);
+      setImageUrls((prev) => ({ ...prev, [id]: url }));
+    };
+
+    products.forEach(product => {
+      if (!imageUrls[product.id]) {
+        loadImage(product.id);
+      }
+    });
+  }, [products, imageUrls]);
 
   useEffect(() => {
     if (query) {
@@ -39,6 +54,23 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
       window.removeEventListener('productsUpdated', handleProductsUpdate);
     };
   }, [setProducts]);
+
+  const getCacheImageUrl = async (id) => {
+    if (!imageCache[id]) {
+      try {
+        const response = await axios.get(`http://localhost:8080/products/product-images/${id}`, {
+          responseType: 'arraybuffer',
+        });
+        const blob = new Blob([response.data], { type: 'image/jpeg' });
+        const imageUrl = URL.createObjectURL(blob);
+        imageCache[id] = imageUrl;
+      } catch (error) {
+        console.error('Error loading image:', error);
+        imageCache[id] = null;
+      }
+    }
+    return imageCache[id];
+  };
 
 
   const handleNextPage = () => {
@@ -137,7 +169,7 @@ function ProductsList({ query, onEditProduct, products, setProducts, onNotify, u
                   <ion-icon name="cart-outline" onClick={() => handleAddToCart(product)}></ion-icon>
                 </div>
                 <div className='products-grid-image'>
-                  <img src={`http://localhost:8080/products/product-images/${product.id}?t=${Date.now()}`} alt={product.name} className='product-image' />
+                  <img src={imageUrls[product.id] || 'placeholder.png'} alt={product.name} className='product-image' />
                   {userRole === 'ADMIN' && (
                     <>
                       <ion-icon name="trash-outline"

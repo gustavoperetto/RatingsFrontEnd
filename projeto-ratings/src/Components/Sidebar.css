@@ -25,6 +25,14 @@
    animation: sidebarOut 0.5s ease-out forwards;
  }
 
+ .sidebar-hello {
+   width: 95%;
+   height: auto;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+ }
+
  .sidebar-hello h1 {
    text-transform: uppercase;
    font-size: 11px;

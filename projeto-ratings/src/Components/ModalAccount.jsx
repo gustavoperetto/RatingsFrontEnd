@@ -51,6 +51,11 @@ function ModalAccount({ show, onClose, onNotify, userData, setUserData }) {
             });
     };
 
+    const handleConfirm = () => {
+        setShowConfirmation(false);
+        handleSave();
+    };
+
     if (!show) return null;
 
     return (
@@ -96,16 +101,12 @@ function ModalAccount({ show, onClose, onNotify, userData, setUserData }) {
                     </label>
                     <div className="modal-buttons">
                         <button type="button" onClick={onClose}>Cancel</button>
-                        <button type="button" onClick={handleSave}>Save</button>
+                        <button type="button" onClick={() => setShowConfirmation(true)}>Save</button>
                     </div>
                 </form>
             </div>
             {showConfirmation && (
-                <Confirmation
-                    message="Do you really want to update this information?"
-                    onConfirm={handleConfirm}
-                    onClose={() => setShowConfirmation(false)}
-                />
+                <Confirmation message="Do you really want to update?" onConfirm={handleConfirm} onClose={() => setShowConfirmation(false)} />
             )}
         </div>
     );
